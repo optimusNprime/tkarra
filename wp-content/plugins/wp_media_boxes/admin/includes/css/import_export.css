@@ -1,0 +1,40 @@
+
+/* ====================================================================== *
+      IMPORT/EXPORT CONTENT
+ * ====================================================================== */	
+
+	.media_boxes_admin .import_export_content{
+		padding: 20px;
+		background: #fff;
+	}
+
+	.media_boxes_admin .import_export_content>*:first-child {
+    	margin-top: 0 !important;
+	}
+
+	.media_boxes_admin .import_export_content .section_title{
+		background: #fff;
+		border: 1px solid #f1f1f1;
+	}
+
+	.media_boxes_admin .import_export_content .grid {
+    	margin: 0 -5px;
+    	margin-bottom: 10px;
+	}
+
+	.media_boxes_admin .import_export_content .grid>div {
+    	padding: 0 5px;
+	}
+
+/* ====================================================================== *
+      ITEMS
+ * ====================================================================== */	
+
+	.media_boxes_admin .item{
+		width: 100%;
+    	background: #DFDFDF;
+		padding: 5px 10px;
+		box-sizing: border-box;
+		margin-bottom: 10px;
+		font-size: 11px;
+	}

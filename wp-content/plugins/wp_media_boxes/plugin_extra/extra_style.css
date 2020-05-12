@@ -1,0 +1,242 @@
+
+/* ====================================================================== *
+      WARNING WHEN PORTFOLIO DOESN'T EXISTS
+ * ====================================================================== */
+
+	.media_boxes_warning{
+		padding: 10px 20px;
+		margin: 20px 0;
+		border: 1px solid #eee;
+		border-left-width: 5px;
+		border-left-color: #d9534f;
+		border-radius: 3px;
+
+		-webkit-box-sizing: border-box;
+		   -moz-box-sizing: border-box;
+	            box-sizing: border-box;
+	}
+
+	.media_boxes_warning h4{
+		margin-top: 0;
+		margin: 0 0 5px 0 !important;
+		color: #d9534f;
+		font-size: 18px !important;
+		padding: 0 !important;
+	}
+
+	.media_boxes_warning p{
+		margin: 0 !important;
+	}
+
+
+	.media-box-image div[data-thumbnail], .media-box-image div[data-popup]{
+		-webkit-box-sizing: border-box !important;
+	       -moz-box-sizing: border-box !important;
+	            box-sizing: border-box !important;
+
+	    padding: 0;
+		margin: 0;
+		border: 0;
+		display: block;
+
+		background: black;
+	}
+
+	.media-box-image div[data-thumbnail] img, .media-box-image div[data-popup] img{
+		border-radius: 0 !important;
+		padding: 0 !important;
+		border: 0 !important;
+		display: block;
+	}
+
+/* ====================================================================== *
+      LOADING AND BROKEN THUMBNAIL EFFECTS 
+ * ====================================================================== */
+
+	.media-box-image div[data-thumbnail], .media-box-image div[data-popup]{
+		background-position: center center !important;
+		background-repeat: no-repeat !important;
+	}
+
+	.image-with-dimensions{
+		background-color: black !important;
+		background-image: url('../plugin/css/icons/loading-image.gif') !important;
+	}
+
+	.broken-image-here{
+		background-color: #BE3730 !important;
+		background-image: url('../plugin/css/icons/broken-image.png') !important;
+	}
+
+	.broken-image-here:not([data-height]){
+		min-height: 150px !important;
+	}
+
+/* ====================================================================== *
+      MEDIA BOXES FIXES
+ * ====================================================================== */
+
+	.media-boxes-filters-container{
+		margin-bottom: 15px;
+	}
+
+	.media-boxes-filters-container:after {
+		content: " ";
+		visibility: hidden;
+		display: block;
+		height: 0;
+		clear: both;
+	}
+
+	.media-boxes-filters-container ul{
+		margin: 0 !important;
+	}
+
+	.media-boxes-filter>li{
+    	margin: 0 8px 0 0 !important;
+	}
+
+	.media-boxes-filter>li:last-child{
+		margin: 0 !important;
+	}
+
+	.media-boxes-filter>li a{
+		-webkit-box-shadow: none !important;
+		   -moz-box-shadow: none !important;
+		 	-ms-box-shadow: none !important;
+			 -o-box-shadow: none !important;
+				box-shadow: none !important;
+
+	}
+
+	.media-boxes-drop-down {
+    	width: 180px;
+    	vertical-align:top;
+    }
+
+    .media-boxes-drop-down-header{
+    	white-space: nowrap;
+	    overflow: hidden;
+	    text-overflow: ellipsis;
+    }
+
+    .media-boxes-sort-order span{
+    	background: inherit !important;
+    }
+
+	.fancyboxMB-arrow{
+		background: none !important;
+	}
+
+	.fancyboxMB-thumbs {
+	    background: rgba(255,255,255,.1) !important;
+	}
+
+	.media-boxes-search input[type=text] {
+		display: inline-block !important; 
+		width: auto !important;
+		margin: 0 !important;
+	}
+
+	.media-box-quote {
+    	margin: -20px;
+	}
+
+/* ====================================================================== *
+      THUMBNAIL OVERLAY
+ * ====================================================================== */	
+
+ 	.thumbnail-overlay{
+		background-color: rgba(105, 105, 105, 0.85);
+	}
+
+	.thumbnail-overlay>div.aligment,
+	.thumbnail-overlay>div.aligment>div.aligment {
+		vertical-align: inherit;
+	}
+
+	.thumbnail-overlay>div.aligment>div.aligment {
+		text-align: inherit;
+	}
+
+/* ====================================================================== *
+      MEDIA BOX LOGO
+ * ====================================================================== */
+
+	.media-box-logo {
+		padding: 50px 0;
+	}
+
+	.media-box-logo-content{
+		padding: 20px;
+		background: rgba(255,255,255, .1);
+		line-height: 17px;
+	}
+
+/* ====================================================================== *
+      MEDIA BOX DARK GRID
+ * ====================================================================== */
+
+ 	.media-box-dark-container{
+ 		padding: 200px 30px;
+ 	}
+
+ 	.media-box-dark-title{
+ 		font-size: 28px;
+	    color: #c9cacc;
+	    font-weight: 600;
+	    text-transform: uppercase;
+	    margin-bottom: 40px;
+ 	}
+
+ 	.media-box-dark-text{
+ 		font-size: 14px;
+	    color: #88898e;
+	    line-height: 26.6px;
+	    font-weight: 300;
+ 	}
+
+ 	.media-box-dark-container-social{
+ 		padding: 50px 30px;
+ 		text-align: center;
+ 	}
+
+ 	.media-box-dark-container-social .media-box-dark-title{
+ 		letter-spacing: 0px;
+	    line-height: normal;
+	    font-weight: 600;
+ 		font-size: 18px;
+ 		text-transform: initial;
+ 	}
+
+ 	.media-box-dark-container-social .media-box-dark-title small{ 
+		font-size: 12px;
+	    display: block;
+	    margin-top: 5px;
+ 	}
+
+ 	.media-box-dark-container-social .media-box-dark-text{ 
+ 		color: #c9cacc;
+ 		font-size: 14px;
+    	line-height: 26.6px;
+ 	}
+
+/* ====================================================================== *
+      SOME CSS CONFLICTS WITH OTHER THEMES
+ * ====================================================================== */
+
+ 	.media-box-image div[data-width][data-height] img{
+	    margin-bottom: auto !important;
+	}
+
+	.media-box [class^=icon-]:before{
+	    font-family: inherit !important;
+	}
+
+	.media-boxes-search .media-boxes-clear{
+		margin-right: 0px !important;
+	}
+
+	.media-boxes-no-more-entries{
+		cursor: auto !important;
+	}

@@ -1,0 +1,386 @@
+/* ====================================================================== *
+      CLEAR AND SELECT ALL POST CATEGORIES
+ * ====================================================================== */	
+
+	.select_all_select_post_categories,
+	.clear_all_select_post_categories{
+		text-decoration: none !important;
+		padding: 1px 10px;
+	    background: #3498db;
+	    color: #fff;
+	    display: inline-block;
+	    margin-bottom: 5px;
+	    margin-right: 5px;
+	}
+
+	.select_all_select_post_categories:hover,
+	.select_all_select_post_categories:active,
+	.select_all_select_post_categories:focus,
+	.clear_all_select_post_categories:hover,
+	.clear_all_select_post_categories:active,
+	.clear_all_select_post_categories:focus{
+		color: #fff;
+		outline: none;
+		-webkit-box-shadow: none;
+  		box-shadow: none;
+	}
+
+/* ====================================================================== *
+      LOAD MORE
+ * ====================================================================== */	
+
+	.load_more_button_css{
+		display: none;
+		margin-top: 20px;
+	}
+
+/* ====================================================================== *
+      POST TYPE ERROR
+ * ====================================================================== */	
+
+	.post_type_error{
+		color: #dd3d36;
+	}
+
+/* ====================================================================== *
+      CUSTOM GALLERY
+ * ====================================================================== */
+	
+	.custom-media-gallery{
+		display: none;
+	}
+
+	/* Buttons */
+
+	.custom-gallery-buttons{
+		margin-bottom: 10px;
+		overflow: hidden;
+	}
+
+	/* The container */
+
+	.custom-gallery-container{
+		background: #f1f1f1;
+		overflow: hidden;
+		padding: 10px;
+		margin-bottom: 20px;
+	}
+
+	/* Items and placeholders */
+
+	.custom-gallery-item, 
+	.custom-gallery-item-placeholder{
+		height: 120px;
+		/*float: left;*/
+		display: inline-block;
+		margin: 10px !important;
+		width: 120px;
+		overflow: hidden;
+	}
+
+	.custom-gallery-item{
+		position: relative;
+		cursor: move;
+		border: 1px solid white;
+		background: #000;
+
+		-webkit-box-shadow: 0 1px 1px rgba(34,25,25,0.2);
+	       -moz-box-shadow: 0 1px 1px rgba(34,25,25,0.2);
+	         -o-box-shadow: 0 1px 1px rgba(34,25,25,0.2);
+	        -ms-box-shadow: 0 1px 1px rgba(34,25,25,0.2);
+	            box-shadow: 0 1px 1px rgba(34,25,25,0.2);
+	}
+
+	.custom-gallery-item-placeholder{
+		border: 1px dashed #BDBDBD;
+	}
+
+	/* When the gallery is empty (Add More Images word) */
+
+	.custom-gallery-empty{
+		margin: 0 !important;
+		width: 100% !important;
+		height: 120px;
+		background: transparent !important;
+		padding: 0 !important;
+		margin: 0 !important;
+		cursor: pointer;
+		border: 1px dashed #BDBDBD;
+		text-align: center;
+		line-height: 120px;
+		font-size: 22px;
+		color: #BDBDBD;
+
+
+	 	-webkit-box-sizing: border-box !important;
+	       -moz-box-sizing: border-box !important;
+	            box-sizing: border-box !important;
+
+        -webkit-box-shadow: none !important;
+		   -moz-box-shadow: none !important;
+		     -o-box-shadow: none !important;
+		    -ms-box-shadow: none !important;
+		        box-shadow: none !important;    
+	}
+
+	.custom-gallery-empty:hover{
+		color: #848484;
+	}
+
+	/* Item buttons */
+
+	.custom-gallery-item-buttons{
+	    position: absolute;
+	    top: 0px;
+	    right: 0px;
+	}
+
+	.custom-gallery-item-buttons>div{
+		float: right;
+		font-size: 18px;
+	    background: rgba(255,255,255,.8);
+	    color: #777777;
+	    padding: 2px 8px 6px 8px;
+	    border-left: 1px solid rgba(255,255,255,.9);
+	    cursor: pointer;
+	    -webkit-transition: all 0.3s ease-out;
+	    -moz-transition: all 0.3s ease-out;
+	    -ms-transition: all 0.3s ease-out;
+	    -o-transition: all 0.3s ease-out;
+	    transition: all 0.3s ease-out;
+	}
+
+	.custom-gallery-item-buttons>div:last-child{
+		border-left: none;
+	}
+
+	.custom-gallery-item-buttons>div .fa{
+		font-size: 13px;
+		color: #424242;
+	}
+
+	/* Images */
+
+	.custom-gallery-item img{
+		min-width: 100%;
+		height: 100%;
+	}
+
+	/* Categories */
+
+	.custom-gallery-categories{
+		margin-bottom: 20px;
+	}
+
+	.custom-gallery-category{
+		background: #f1f1f1;
+		padding: 5px 10px;
+		margin-bottom: 5px;
+		display: inline-block;
+		margin-right: 5px;
+	}
+
+	.custom-gallery-category .fa-trash{
+		cursor: pointer;
+	}
+
+	.gallery-item-category{
+		width: 100%;
+	    background: #DFDFDF;
+	    padding: 7px;
+	    box-sizing: border-box;
+	    margin-bottom: 5px;
+	    font-size: 12px;
+	}
+
+/* ====================================================================== *
+      FILTERS
+ * ====================================================================== */
+	
+	.filter_group_container{
+		overflow: hidden;
+		margin-bottom: 25px;
+	}
+
+ 	.filter_group{
+ 		background: #f1f1f1;
+ 		width: 300px;
+ 		float: left;
+ 		margin-right: 20px;
+ 		position: relative;
+ 	}
+	
+	.remove_filter, .remove_filter:hover{
+		color: white;
+		float: right;
+	}
+
+ 	.filter_title{
+ 		text-align: center;
+ 		background: #454545;
+ 		color: white;
+ 		padding: 10px;
+ 		font-size: 14px;
+ 	}
+	
+	.filter_option{
+		border-bottom: 1px solid #DFDFDF;
+		padding: 13px;
+	}
+
+	.filter_option:last-child{
+		border-bottom: none !important;
+	}
+
+ 	.filter_option label{
+ 		width: 100% !important;
+ 		box-sizing: border-box;
+ 		margin-bottom: 10px;
+ 	}
+	
+ 	.filter_option input[type="text"]{
+ 		width: 100%;
+ 		padding: 8px;
+ 	}
+
+ 	.filter_option select{
+ 		width: 100%;
+ 	}
+
+ 	/* SORT THE FILTER ITEMS */
+
+ 	.sort_filter_items{
+ 		background: #fff;
+ 		padding: 10px;
+ 		border: 1px dashed #D5D5D5;
+ 	}
+
+ 	.sort_filter_items>div{
+ 		width: 100%;
+ 		background: #DFDFDF;
+ 		padding: 7px;
+ 		box-sizing: border-box;
+ 		margin-bottom: 2px;
+ 		font-size: 12px;
+ 		cursor: ns-resize;
+ 	}
+
+ 	.sort_filter_items>div:last-child{
+ 		margin-bottom: 0 !important;
+ 	}
+
+/* ====================================================================== *
+      LAYOUT OF FILTER-SEARCH-SORT
+ * ====================================================================== */
+
+	.available_items, .current_grid{
+	    position: relative;
+    	border: 1px solid #e6e5e5;
+    	min-height: 386px;
+    	box-sizing: border-box;
+    	padding: 10px;
+    	background: #f1f1f1;
+    }
+
+    .layout_sortable_ui_item{
+    	white-space: nowrap;
+	    vertical-align: middle;
+	    margin: 2px;
+	    padding: 5px 12px;
+	    position: relative;
+	    background: #454545;
+	    color: white;
+	    display: inline-block !important;
+	    cursor: pointer;
+	    -webkit-box-sizing: border-box !important;
+	    -moz-box-sizing: border-box !important;
+	    box-sizing: border-box !important;
+	    cursor: move;
+	    cursor: -moz-grab;
+	    cursor: -webkit-grab;
+ 	}
+
+	.drop_zone_1, .drop_zone_2{
+		position: relative;
+		border: 1px dashed #BDBDBD;
+		padding: 8px;
+		text-align: center;
+		margin-bottom: 20px;
+		min-height: 52px;
+		box-sizing: border-box;
+		background: #ececec;
+	}
+
+	.drop_zone_placeholder{
+		color: #999999;
+		font-weight: bold;
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 100%;
+		text-align: center;
+		display: block;
+		line-height: 52px;
+	}
+
+	.drop_zone_1:hover .configure_drop_zone,
+	.drop_zone_2:hover .configure_drop_zone{
+		opacity: 1;
+
+		-webkit-transform: translate3d(0,0,0);
+    	   -moz-transform: translate3d(0,0,0);
+    		-ms-transform: translate3d(0,0,0);
+    		 -o-transform: translate3d(0,0,0);
+    		 	transform: translate3d(0,0,0);
+	}
+
+	.configure_drop_zone{
+		position: absolute;
+	    top: -1px;
+	    right: -30px;
+	    font-size: 18px;
+	    border: 1px dashed #BDBDBD;
+	    border-left: 0 !important;
+	    background: #ececec;
+	    color: #777777;
+	    padding: 4px 7px;
+	    cursor: pointer;
+
+		opacity: 0;
+
+	    -webkit-transform: translate3d(-8px,0,0);
+    	   -moz-transform: translate3d(-8px,0,0);
+    		-ms-transform: translate3d(-8px,0,0);
+    		 -o-transform: translate3d(-8px,0,0);
+    			transform: translate3d(-8px,0,0);
+
+	    -webkit-transition: all 0.3s ease-out;
+    	   -moz-transition: all 0.3s ease-out;
+    		-ms-transition: all 0.3s ease-out;
+    		 -o-transition: all 0.3s ease-out;
+    			transition: all 0.3s ease-out;
+	}
+	.configure_drop_zone:hover{
+		color: #454545;
+	}
+	
+	.current_grid .grid{
+		margin-bottom: -20px;
+	}
+
+	.current_grid .item-fake{
+		height: 100px;
+		background: #7f8c8d;
+		margin-bottom: 20px;
+	}
+
+
+
+
+
+
+
+
+
+
+

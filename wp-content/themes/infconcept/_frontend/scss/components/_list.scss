@@ -1,0 +1,43 @@
+.list {
+  + .button-container,
+  + .list {
+    margin-top: 40px;
+  }
+
+  &__title {
+    font-family: $serif;
+    font-size: 1.6rem;
+    font-style: italic;
+    font-weight: bold;
+  }
+
+  ul {
+    color: currentColor;
+    margin-top: 10px;
+    padding-left: 15px;
+
+
+  }
+
+  li {
+    font-family: $serif;
+    font-size: 1.6rem;
+    margin-top: 10px;
+  }
+}
+
+@media screen and (min-width: $lg) {
+  .list {
+    &__items {
+      &--two {
+        display: flex;
+        justify-content: space-between;
+
+        ul {
+          flex: 1 1 50%;
+          padding-right: 15px;
+        }
+      }
+    }
+  }
+}

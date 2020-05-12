@@ -1,0 +1,50 @@
+.hero {
+    &__content {
+        padding: 220px 5% 210px;
+        position: relative;
+    }
+
+    &__logo {
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-position: center center;
+        bottom: 0;
+        display: block;
+        max-width: 1031px;
+        opacity: 0.1;
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 95%;
+        z-index: 1;
+    }
+
+    &__title {
+        font-family: $sans-serif;
+        font-size: 4.5rem;
+        font-weight: 500;
+        max-width: 800px;
+    }
+
+    &__subtitle,
+    &__subtitle > p {
+        font-size: 1.6rem;
+        margin-top: 55px;
+    }
+}
+
+@media screen and (min-width: $md) {
+    .hero {
+        &__title {
+            font-size: 6.5rem;
+        }
+    }
+}
+
+@media screen and (min-width: $lg) {
+    .hero {
+        &__logo {
+            left: 100%;
+        }
+    }
+}

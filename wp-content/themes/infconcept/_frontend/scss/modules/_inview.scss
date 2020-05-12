@@ -1,0 +1,29 @@
+$s: 600;
+
+[data-module="inview"] {
+  opacity: 1;
+  transform: translateX(0px) translateY(0px) translateZ(0px);
+  transition: opacity #{$s}ms ease 0s, transform #{$s}ms ease 0s;
+
+  &.inview--not {
+    opacity: 0;
+    transform: translate(0, -40px);
+
+    &.image-box {
+      opacity: 0;
+      transform: translate(0, 0);
+    }
+  }
+
+  &.inview--1 {
+    transition-delay: #{$s / 2}ms;
+  }
+
+  &.inview--2 {
+    transition-delay: #{$s}ms;
+  }
+
+  &.inview--3 {
+    transition-delay: #{$s * 1.5}ms;
+  }
+}

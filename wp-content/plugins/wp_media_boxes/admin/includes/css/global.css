@@ -1,0 +1,584 @@
+
+/* ====================================================================== *
+      GLOBAL
+ * ====================================================================== */
+
+	.media_boxes_admin .text-center{
+		text-align: center;
+	}
+
+	.media_boxes_options_page .updated{
+		padding: 10px 20px;
+		margin: 0;
+		margin-bottom: 20px;
+	}
+
+/* ====================================================================== *
+      WAINT UNTIL PAGE LOADS
+ * ====================================================================== */
+
+	.media_boxes_options_page_loader{
+ 		text-align: center;
+ 		margin-top: 80px;
+ 	}
+
+ 	.media_boxes_options_page{
+ 		display: none;
+ 		padding-right: 20px;
+ 	}
+
+/* ====================================================================== *
+      BLOCKUI
+ * ====================================================================== */
+
+	.media_boxes_blockUI{
+		position: absolute;
+		position: fixed;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 100%;
+		background: rgba(255,255,255,.8);
+		z-index: 999999;
+	}
+
+	.media_boxes_blockUI_center{
+		position: absolute;
+		left: 50%;
+		top: 50%;
+		margin-left: -25px;
+		margin-top: -20px;
+	}
+
+/* ====================================================================== *
+      MESSAGES
+ * ====================================================================== */
+	
+	.media_boxes_messages{
+		position: absolute;
+		position: fixed;
+		top: 40px;
+		right: 20px;
+	}
+
+	.media_boxes_messages .media_boxes_new_message{
+		margin-bottom: 10px;
+		font-size: 13px;
+		max-width: 400px;		
+		display: none;  
+		padding: 20px 20px 20px 20px;
+		background: #333;
+		border: 1px solid #E5E5E5;
+		color: #ECF0F1;
+	}
+
+	.media_boxes_messages .fa{
+		font-size: 18px;
+		margin-right: 5px;
+	}
+
+	.media_boxes_messages .fa-check, .media_boxes_messages .fa-check-circle-o{
+		color: #27ae60;	
+	}
+
+	.media_boxes_messages .fa-times{
+		color: #e74c3c;
+	}
+
+/* ====================================================================== *
+      TABLE
+ * ====================================================================== */	
+
+	.media_boxes_admin .media_boxes_table th{
+		padding: 15px 15px;
+		font-weight: bold;
+	}
+
+	.media_boxes_admin .media_boxes_table td{
+		vertical-align: middle;
+		padding: 15px;
+	}
+
+	.media_boxes_admin .media_boxes_table td strong{
+		color: #555;
+	}
+
+/* ====================================================================== *
+      FORM ITEMS
+ * ====================================================================== */	
+
+ 	.media_boxes_admin .media_boxes_admin_title{
+		font-size: 22px;
+		margin: 30px 0;
+		background: #e6e6e6;
+	}
+
+	.media_boxes_admin .media_boxes_admin_title img{
+		vertical-align: middle;
+		background: white;
+    	padding: 4px 3px 4px 3px;
+	}
+	
+	.media_boxes_admin input[type="text"], 
+	.media_boxes_admin select{
+		box-shadow: none !important;
+    	border-radius: 1px;
+    	border: 1px solid #DDD;	
+    	font-size: 14px;
+    	color: #333 !important;
+	}
+
+	.media_boxes_admin input[type="text"]:focus, 
+	.media_boxes_admin select:focus{
+    	border-color: #5b9dd9;
+	}
+
+	.media_boxes_admin input.small_input{
+		width: 50px;
+	}
+	
+	.media_boxes_admin label,
+	.media_boxes_admin label{
+		width: 150px !important;
+		margin-right: 20px;
+		display: inline-block;
+		font-weight: 400;
+    	color: #444;
+	}
+
+	.media_boxes_admin .ui-dialog label{
+		width: 100px !important;
+	}
+
+	.media_boxes_admin label small{
+		color: #444;
+		font-weight: normal;
+	}
+
+	.media_boxes_admin p, 
+	.media_boxes_admin hr, 
+	.media_boxes_admin h2, 
+	.media_boxes_admin h3, 
+	.media_boxes_admin h4{
+		margin: 0 0 20px 0 !important;
+	}
+
+	.media_boxes_admin h2, 
+	.media_boxes_admin h3, 
+	.media_boxes_admin h4{
+		padding: 0 !important;
+	}
+
+	.media_boxes_admin .description{
+		display: inline-block;
+		margin-left: 20px;
+		display: none;
+	}
+
+	.media_boxes_admin .form-controls{
+		background: #f1f1f1;
+		padding: 20px;
+	}
+
+/* ====================================================================== *
+      SECTION TITLE
+ * ====================================================================== */		
+
+	.media_boxes_admin .section_title {
+	   	font-size: 15px !important;
+	    background: #f1f1f1;
+	    padding: 20px 20px;
+	    margin: 25px 0 25px;
+	    text-transform: uppercase;
+	    font-weight: 600;
+	} 
+
+	.media_boxes_admin .title{
+ 		margin-bottom: 10px;
+		text-transform: uppercase;
+		font-weight: bold;
+	}
+
+/* ====================================================================== *
+      BUTTONS
+ * ====================================================================== */			
+
+	.media_boxes_admin .button-primary:hover{
+		opacity: .9;
+	}
+
+	.media_boxes_admin .button-primary{
+		vertical-align: middle !important;
+		border-radius: 0 !important;
+		height: auto !important;
+	    padding: 2px 11px !important;
+	    color: #ffffff !important;
+	    text-shadow: none;
+	    text-decoration: none;
+	    outline: none;
+	    text-shadow: none !important;
+	    border: none !important;
+
+	    -webkit-box-shadow: none !important;
+	       -moz-box-shadow: none !important;
+	         -o-box-shadow: none !important;
+	        -ms-box-shadow: none !important;
+	            box-shadow: none !important;
+	}
+
+	.media_boxes_admin .button-sm{
+	 	padding: 6px 11px !important;
+	    line-height: 13px;
+	    font-size: 13px;
+	    vertical-align: top !important;
+	    margin-top: 1px;
+ 	}
+
+	.media_boxes_admin .button-primary.green{
+		background: #27ae60 !important;
+	}
+
+	.media_boxes_admin .button-primary.blue{
+		background: #3498db !important;
+	}
+	
+	.media_boxes_admin .button-primary.gray{
+		background: #7f8c8d !important;
+	}
+
+	.media_boxes_admin .button-primary.red{
+		background: #e74c3c !important;	
+	}
+
+/* ====================================================================== *
+      SLIDER
+ * ====================================================================== */
+	
+	.media_boxes_admin .ui-slider + input{
+		width: 50px;
+		margin-left: 10px;
+		vertical-align: middle;
+	}
+
+	.media_boxes_admin .ui-slider {
+		position: relative;
+		text-align: left;
+		background: #e1e1e1;
+		width: 189px;
+		display: inline-block;
+	}
+
+	.media_boxes_admin .ui-slider .ui-slider-handle {
+		position: absolute;
+		z-index: 2;
+		width: .8em;
+		height: .8em;
+		cursor: default;
+		-ms-touch-action: none;
+		touch-action: none;
+
+		border: 2px solid #999;
+		border-radius: 50%;
+		background: #fff;
+		outline: none;
+		cursor: pointer;
+	}
+	.media_boxes_admin .ui-slider .ui-slider-range {
+		position: absolute;
+		z-index: 1;
+		font-size: .7em;
+		display: block;
+		border: 0;
+		background-position: 0 0;
+		background: #999;
+	}
+
+	/* For IE8 - See #6727 */
+	.media_boxes_admin .ui-slider.ui-state-disabled .ui-slider-handle,
+	.media_boxes_admin .ui-slider.ui-state-disabled .ui-slider-range {
+		filter: inherit;
+	}
+
+	.media_boxes_admin .ui-slider-horizontal {
+		height: .4em;
+	}
+	.media_boxes_admin .ui-slider-horizontal .ui-slider-handle {
+		top: -.35em;
+		margin-left: -.6em;
+	}
+	.media_boxes_admin .ui-slider-horizontal .ui-slider-range {
+		top: 0;
+		height: 100%;
+	}
+	.media_boxes_admin .ui-slider-horizontal .ui-slider-range-min {
+		left: 0;
+	}
+	.media_boxes_admin .ui-slider-horizontal .ui-slider-range-max {
+		right: 0;
+	}
+
+	.media_boxes_admin .ui-slider-vertical {
+		width: .8em;
+		height: 100px;
+	}
+	.media_boxes_admin .ui-slider-vertical .ui-slider-handle {
+		left: -.3em;
+		margin-left: 0;
+		margin-bottom: -.6em;
+	}
+	.media_boxes_admin .ui-slider-vertical .ui-slider-range {
+		left: 0;
+		width: 100%;
+	}
+	.media_boxes_admin .ui-slider-vertical .ui-slider-range-min {
+		bottom: 0;
+	}
+	.media_boxes_admin .ui-slider-vertical .ui-slider-range-max {
+		top: 0;
+	}
+
+/* ====================================================================== *
+      TABS
+ * ====================================================================== */
+	
+	.media_boxes_admin .ui-tabs-panel{
+		padding: 20px;
+	}
+
+	.media_boxes_admin .ui-tabs-panel>*:first-child{
+		margin-top: 0 !important;
+	}
+
+	.media_boxes_admin .media_boxes_tabs>ul{
+		overflow: hidden;
+		margin: 0 !important;
+		background: #DFDFDF;
+		/*border-bottom: 5px solid #999;*/
+	}
+
+	.media_boxes_admin .media_boxes_tabs>ul>li{
+		outline: 0 !important;
+		padding: 0 !important;
+		margin: 0 !important;
+	}
+	
+	.media_boxes_admin .media_boxes_tabs>ul>li a{
+		float: left;
+		text-decoration: none;
+		color: #999;
+		border: 0 !important;
+		outline: 0 !important;
+		padding: 17px 20px;
+		-webkit-box-shadow: none;
+		   -moz-box-shadow: none;
+			    box-shadow: none;
+	}
+
+	.media_boxes_admin .media_boxes_tabs>ul>li.ui-state-active a{
+		background: #fff;
+		color: #424242 !important;
+	}
+
+	.media_boxes_admin .media_boxes_tabs>ul>li.ui-state-active a:focus{
+		outline: none !important;
+		-webkit-box-shadow: none;
+		   -moz-box-shadow: none;
+			    box-shadow: none;
+	}
+
+	.media_boxes_admin .media_boxes_tabs>ul>li.ui-state-active a, .media_boxes_tabs>ul>li a:hover{
+		color: #424242;
+	}
+
+	.media_boxes_admin .media_boxes_tabs>div{
+		background: #fff;
+	}
+
+/* ====================================================================== *
+      GRID
+ * ====================================================================== */
+
+	.media_boxes_admin .grid{
+ 		overflow: hidden;
+ 		margin: 0 -10px;
+ 		margin-bottom: 20px;
+ 	}
+
+ 	.media_boxes_admin .grid>div{
+ 		float: left;
+ 		padding: 0 10px; 
+ 		box-sizing: border-box;
+ 	}
+
+	.media_boxes_admin .col-25p{
+		width: 25%;
+ 	}
+
+ 	.media_boxes_admin .col-33p{
+		width: 33.33%;
+ 	}
+
+ 	.media_boxes_admin .col-50p{
+		width: 50%;
+ 	}
+
+ 	.media_boxes_admin .col-30{
+		width: 30px;
+ 	}
+
+ 	.media_boxes_admin .col-50{
+		width: 50px;
+ 	}
+
+	.media_boxes_admin .col-100{
+		width: 100px;
+ 	}
+
+ 	.media_boxes_admin .col-160{
+		width: 160px;
+ 	}
+
+ 	.media_boxes_admin .col-180{
+		width: 180px;
+ 	}
+
+ 	.media_boxes_admin .col-300{
+ 		width: 300px;
+ 	}
+
+ 	.media_boxes_admin .col-400{
+ 		width: 400px;
+ 	}
+
+	.media_boxes_admin .col-500{
+ 		width: 500px;
+ 	}
+
+ /* ====================================================================== *
+      DIALOG
+ * ====================================================================== */	
+
+ 	.media_boxes_admin .ui-dialog-titlebar{
+ 		font-size: 15px;
+ 	}
+
+ 	.ui-dialog-title{
+ 		font-size: 14px;
+ 	}
+
+/* ====================================================================== *
+      TOOLTIP
+ * ====================================================================== */
+
+	.ui-tooltip {
+		padding: 8px;
+		position: absolute;
+		z-index: 999999999;
+		max-width: 400px;
+		background: #4c4c4c;
+		color: #fff;
+		font-size: 11px;
+	}
+	
+	.ui-tooltip-content::after {
+	    content: '';
+	    position: absolute;
+	    border-style: solid;
+	    display: block;
+	    width: 0;
+	}
+	.ui-tooltip-content::after {
+	    top: 50%;
+	    margin-top: -10px;
+	    left: -10px;
+	    border-color: transparent #4c4c4c;
+	    border-width: 10px 10px 10px 0;
+	}
+
+	.tooltip_at_top .ui-tooltip-content::after{
+		left: 50%;
+		margin-left: -10px;
+		bottom: -9px;
+		top: auto;
+		margin-top: 0;
+		border-width: 10px 10px 0px 10px;
+		border-color: #4c4c4c transparent;
+	}
+	
+/* ====================================================================== *
+      WP COLOR PICKER
+ * ====================================================================== */	
+
+	.media_boxes_admin .wp-picker-input-wrap input.background_color,
+	.media_boxes_admin .overlay_background_color,
+	.media_boxes_admin .content_background_color{
+		max-width: 65px !important;
+	}
+
+/* ====================================================================== *
+      HELP TEXT
+ * ====================================================================== */	
+
+	.media_boxes_admin_help_text{
+		font-size: 10px;
+		margin-left: 5px;
+		color: #949494;
+	}
+
+/* ====================================================================== *
+      META BOXES TITLE
+ * ====================================================================== */	
+
+ 	#media_boxes-meta-boxes{
+ 		margin: 20px 0;
+ 		/*background: #f8f9f9;*/
+ 	}
+
+ 	#media_boxes-meta-boxes h2{
+ 		padding: 0 !important;
+ 		background: #e54e53 !important; 
+ 		border: 0 !important;
+ 	}
+
+ 	#media_boxes-meta-boxes .inside{
+ 		margin-top: 0;
+ 		border: 1px solid #e5e5e5;
+ 	}
+
+ 	#media_boxes-meta-boxes h3{
+ 		background: #f1f1f1;
+ 		padding: 10px 10px !important;
+ 		margin-bottom: 10px;
+ 	}
+
+	#media_boxes-meta-boxes .hndle {
+	    height: 40px;
+	    position: relative;
+	    white-space: nowrap;
+	    font-size: 18px;
+	    line-height: 40px;
+	    box-sizing: border-box;
+	    padding: 0;
+	    border: none;
+	    background: #dcdcdc;
+	}
+
+	#media_boxes-meta-boxes .hndle::after {
+		content: '';
+		height: 40px;
+	    font-weight: 400;
+	    display: inline-block;
+	    padding: 0 20px;
+	    margin-top: 5px;
+	    margin-left: 5px;
+    	padding-left: 125px;
+	    position: relative;
+	    background-image: url(../images/media-boxes-inverted.png) !important;
+	    background-repeat: no-repeat;
+	    -webkit-background-size: contain;
+	    background-size: contain;
+	}
+
+	#media_boxes-meta-boxes .hndle span{
+		display: none;
+	}

@@ -1,0 +1,61 @@
+.map {
+  padding-bottom: 100%;
+
+  .map-container & {
+    height: 100%;
+    left: 0;
+    padding-bottom: 0;
+    position: absolute;
+    top: 0;
+    width: 100%;
+  }
+}
+
+.map-container {
+  display: block;
+  position: relative;
+  width: 100%;
+
+  &::before {
+    content: '';
+    display: block;
+    padding-bottom: 100%;
+  }
+}
+
+@media screen and (min-width: $sm) {
+  .map {
+    padding-bottom: 80%;
+  }
+
+  .map-container {
+    &::before {
+      padding-bottom: 80%;
+    }
+  }
+}
+
+@media screen and (min-width: $md) {
+  .map {
+    padding-bottom: 60%;
+  }
+
+  .map-container {
+    &::before {
+      padding-bottom: 60%;
+    }
+  }
+}
+
+@media screen and (min-width: $lg) {
+  .map {
+    height: 100%;
+    padding-bottom: 0;
+  }
+
+  .map-container {
+    &::before {
+      padding-bottom: 40%;
+    }
+  }
+}
