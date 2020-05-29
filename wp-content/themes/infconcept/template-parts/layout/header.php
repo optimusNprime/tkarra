@@ -4,7 +4,7 @@
 <header>
   <div class="menu-container js-menu">
     <a href="<?php echo get_home_url(); ?>" style="text-decoration: none; color: transparent;">
-      <?php if (get_field(logo_variation)) : ?>
+      <?php if (get_field('logo_variation')) : ?>
         <img class="menu__logo" src="<?php the_field('logo_variation'); ?>" style="background-color: <?php echo $colorPage; ?>">
       <?php elseif  (get_field('logo_website_header', 'option')): ?>
         <img class="menu__logo" src="<?php the_field('logo_website_header', 'option'); ?>" style="background-color: <?php echo $colorPage; ?>">
