@@ -1,0 +1,48 @@
+.button {
+  position: relative;
+
+  &--file {
+    color: $white;
+    display: inline-block;
+    font-family: $serif;
+    font-size: 1.4rem;
+    font-weight: bold;
+    margin-top: 10px;
+    padding: 10px 45px 10px 10px;
+    text-decoration: none;
+  }
+
+  &__icons {
+    display: block;
+    height: 22px;
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 22px;
+  }
+
+  &__arrow,
+  &__bar {
+    font-size: 1rem;
+    left: 50%;
+    position: absolute;
+    transform: translateX(-50%);
+  }
+
+  &__arrow {
+    font-size: 2rem;
+    top: 0px;
+    transition: top 0.3s;
+  }
+
+  &__bar {
+    bottom: 0;
+  }
+
+  &:hover {
+    .button__arrow {
+      top: 3px;
+    }
+  }
+}

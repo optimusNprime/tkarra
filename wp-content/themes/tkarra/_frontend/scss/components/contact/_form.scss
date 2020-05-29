@@ -1,0 +1,88 @@
+.form {
+  box-sizing: border-box;
+  color: $blue;
+  font-family: $serif;
+  margin-top: 40px;
+
+  p,
+  label,
+  input,
+  textarea,
+  select {
+    width: 100%;
+  }
+
+  p {
+    display: block;
+    font-size: 1.6rem;
+    margin-bottom: 5px;
+  }
+
+  input,
+  select {
+    box-sizing: border-box;
+    display: block;
+    height: 45px;
+    margin-bottom: 10px;
+  }
+
+  input,
+  textarea,
+  select {
+    border: 2px solid $grey;
+    color: currentColor;
+    font-size: 1.4rem;
+    font-weight: 400;
+    outline: none;
+    line-height: 20px;
+    padding: 8px 12px;
+    transition: border-color 0.3s;
+
+    &:focus {
+      border-color: currentColor;
+      outline: none;
+    }
+
+    &.wpcf7-not-valid {
+      border-color: red;
+    }
+  }
+
+
+  select {
+    box-sizing: border-box;
+    display: block;
+    height: 45px;
+    margin-bottom: 10px;
+  }
+
+  [type=submit] {
+    background-color: $blue;
+    border: 2px solid $blue;
+    color: white;
+    cursor: pointer;
+    display: inline-block;
+    font-size: 1.6rem;
+    font-weight: 400;
+    height: auto;
+    margin-top: 20px;
+    padding: 15px 65px;
+    transition: background-color 0.3s, color 0.3s;
+    width: auto;
+
+    &:hover {
+      background-color: transparent;
+      color: $blue;
+    }
+  }
+}
+
+//Contact form 7 override
+
+.wpcf7-not-valid-tip {
+  display: none !important;
+}
+
+.wpcf7-response-output {
+  font-size: 1.6rem !important;
+}

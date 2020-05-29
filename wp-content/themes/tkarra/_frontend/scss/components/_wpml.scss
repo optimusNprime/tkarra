@@ -1,0 +1,49 @@
+.wpml-ls {
+  background-color: $white;
+  border: 0 !important;
+  padding: 20px !important;
+}
+
+.wpml-ls-current-language {
+  display: none !important; //override wpml default style
+}
+
+.wpml-ls-display {
+  display: none;
+}
+
+.wpml-ls-link {
+  text-transform: uppercase;
+  color: $blue;
+  font-size: 1.2rem;
+}
+
+@media screen and (min-width: $lg) {
+  .wpml-ls-link {
+    color: $darkgrey;
+    padding: 0 0 0 20px !important;
+    position: relative;
+    transition: color 0.3s;
+
+    &::before {
+      background-color: $darkgrey;
+      content: '';
+      left: 0;
+      height: 11px;
+      position: absolute;
+      top: calc(50% + 1px);
+      transform: translateY(-50%);
+      width: 1px;
+    }
+
+    &:hover {
+      color: $blue;
+    }
+  }
+}
+
+@media screen and (min-width: $xl) {
+  .wpml-ls-native {
+    font-size: 1.4rem;
+  }
+}

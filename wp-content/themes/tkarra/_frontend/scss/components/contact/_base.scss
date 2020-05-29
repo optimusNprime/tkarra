@@ -1,0 +1,132 @@
+.contact {
+  &__zone {
+    padding: 50px 15px;
+  }
+
+  &__title {
+    color: currentColor;
+    font-family: $sans-serif;
+    font-weight: 500;
+    font-size: 3.2rem;
+    line-height: 4rem;
+  }
+
+  &__text {
+    color: currentColor;
+    font-family: $serif;
+    font-size: 1.6rem;
+    font-weight: 500;
+    line-height: 2.6rem;
+    letter-spacing: 1px;
+    margin-top: 40px;
+
+    > * {
+      color: currentColor;
+      font-size: 1.6rem;
+      font-weight: 500;
+      line-height: 2.6rem;
+      letter-spacing: 1px;
+      margin: 0;
+    }
+  }
+
+  &__details {
+    border-top: 1px solid currentColor;
+    display: flex;
+    flex-direction: column;
+    margin-top: 35px;
+    padding: 35px 0 0;
+  }
+
+  &__detail {
+    letter-spacing: 1px;
+    font-family: $serif;
+    margin-top: 20px;
+
+    &__info {
+      margin-top: 20px;
+
+      +.contact__info {
+        margin-top: 10px;
+      }
+    }
+
+    &__title {
+      color: currentColor;
+      font-size: 2.6rem;
+      font-weight: 500;
+    }
+
+    &__name {
+      font-size: 1.6rem;
+    }
+
+    &__link {
+      color: currentColor;
+      font-family: $serif;
+      font-size: 1.6rem;
+      font-weight: bold;
+      text-decoration: none;
+
+      &:hover {
+        text-decoration: none;
+      }
+    }
+
+    +.contact__detail {
+      margin-top: 50px;
+    }
+  }
+
+  &__form {
+    &__text {
+      color: currentColor;
+      display: block;
+      font-family: $sans-serif;
+      font-size: 1.6rem;
+      font-weight: normal;
+      margin: 20px 0;
+      text-decoration: none;
+    }
+  }
+}
+
+[data-class=wpcf7cf_group] {
+  margin-top: 20px;
+}
+
+@media screen and (min-width: $md) {
+  .contact {
+    &__details {
+      align-items: flex-start;
+      flex-direction: row;
+    }
+
+    &__detail {
+      margin-top: 0;
+
+      +.contact__detail {
+        margin-top: 0;
+        padding-left: 50px;
+      }
+    }
+  }
+}
+
+@media screen and (min-width: $lg) {
+  .contact {
+    &__zone {
+      padding: 80px 60px;
+    }
+
+    &__title {
+      font-size: 3.5rem;
+    }
+
+    &__detail {
+      +.contact__detail {
+        padding-left: 100px;
+      }
+    }
+  }
+}
