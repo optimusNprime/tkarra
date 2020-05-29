@@ -24,16 +24,29 @@ class Visual_Portfolio_Images {
      * Visual_Portfolio_Images constructor.
      */
     public static function construct() {
-        // Prepare images base64 placeholders.
-        // Thanks https://wordpress.org/plugins/powerkit/.
         add_action( 'init', 'Visual_Portfolio_Images::allow_lazy_attributes' );
         add_filter( 'kses_allowed_protocols', 'Visual_Portfolio_Images::kses_allowed_protocols', 15 );
-        add_filter( 'wp_update_attachment_metadata', 'Visual_Portfolio_Images::generate_attachment_placeholder', 15 );
-        add_filter( 'wp_generate_attachment_metadata', 'Visual_Portfolio_Images::generate_attachment_placeholder', 15 );
         add_filter( 'wp_get_attachment_image_attributes', 'Visual_Portfolio_Images::add_image_placeholders', 15, 3 );
 
         // ignore Jetpack lazy.
-        add_filter( 'jetpack_lazy_images_skip_image_with_atttributes', 'Visual_Portfolio_Images::jetpack_lazy_images_skip_image_with_atttributes', 15, 2 );
+        add_filter( 'jetpack_lazy_images_skip_image_with_attributes', 'Visual_Portfolio_Images::jetpack_lazy_images_skip_image_with_attributes', 15, 2 );
+    }
+
+    /**
+     * Init hooks.
+     */
+    public static function is_enabled() {
+        // check for AMP endpoint.
+        if ( function_exists( 'is_amp_endpoint' ) && is_amp_endpoint() ) {
+            return false;
+        }
+
+        // disable using filter.
+        if ( ! apply_filters( 'vpf_images_lazyload', true ) ) {
+            return false;
+        }
+
+        return true;
     }
 
     /**
@@ -48,6 +61,7 @@ class Visual_Portfolio_Images {
                     $tags['data-vpf-src']    = true;
                     $tags['data-vpf-sizes']  = true;
                     $tags['data-vpf-srcset'] = true;
+                    $tags['data-no-lazy']    = true;
                 }
             }
         }
@@ -68,17 +82,31 @@ class Visual_Portfolio_Images {
     /**
      * Get attachment image wrapper.
      *
-     * @param int          $attachment_id attachment image id.
+     * @param string|int   $attachment_id attachment image id.
      * @param string|array $size image size.
      * @param bool         $icon icon.
      * @param string|array $attr image attributes.
+     * @param bool         $lazyload use lazyload tags.
      *
      * @return string
      */
-    public static function get_attachment_image( $attachment_id, $size = 'thumbnail', $icon = false, $attr = '' ) {
-        self::$image_processing = true;
-        $image = wp_get_attachment_image( $attachment_id, $size, $icon, $attr );
-        self::$image_processing = false;
+    public static function get_attachment_image( $attachment_id, $size = 'thumbnail', $icon = false, $attr = '', $lazyload = true ) {
+        $lazyload = self::is_enabled() && $lazyload;
+
+        if ( $lazyload ) {
+            self::$image_processing = true;
+        }
+
+        $image = apply_filters( 'vpf_wp_get_attachment_image_extend', false, $attachment_id, $size, $attr, $lazyload );
+
+        if ( ! $image ) {
+            $image = wp_get_attachment_image( $attachment_id, $size, $icon, $attr );
+        }
+
+        if ( $lazyload ) {
+            self::$image_processing = false;
+        }
+
         return $image;
     }
 
@@ -91,63 +119,55 @@ class Visual_Portfolio_Images {
      * @return string
      */
     public static function get_image_placeholder( $width = 1, $height = 1 ) {
-        // 'pk' slug just because this code is from Powerkit plugin,
-        // so we need to be compatible with it.
-        $transient = sprintf( 'pk_image_placeholder_%s_%s', $width, $height );
-
-        $placeholder_image = get_transient( $transient );
-
-        if ( ! $placeholder_image ) {
-            ob_start();
-
-            $image = imagecreate( $width, $height );
-            $background = imagecolorallocatealpha( $image, 0, 0, 255, 127 );
-
-            imagepng( $image, null, 9 );
-            imagecolordeallocate( $image, $background );
-            imagedestroy( $image );
-
-            $placeholder_code = ob_get_clean();
-
-            $placeholder_image = 'data:image/png;base64,' . base64_encode( $placeholder_code );
-
-            set_transient( $transient, $placeholder_image );
+        if ( ! self::is_enabled() ) {
+            return false;
         }
 
-        return $placeholder_image;
+        if ( ! (int) $width || ! (int) $height ) {
+            return false;
+        }
+
+        $ratio  = self::get_ratio( $width, $height );
+        $width  = $ratio['width'];
+        $height = $ratio['height'];
+
+        // We need to use base64 to prevent rare cases when users use plugins
+        // that replaces http to https in xmlns attribute.
+        // phpcs:ignore
+        $placeholder = base64_encode( '<svg width="' . $width . '" height="' . $height . '" viewBox="0 0 ' . $width . ' ' . $height . '" fill="none" xmlns="http://www.w3.org/2000/svg"></svg>' );
+
+        $escape_search  = array( '<', '>', '#', '"' );
+        $escape_replace = array( '%3c', '%3e', '%23', '\'' );
+
+        return 'data:image/svg+xml;base64,' . str_replace( $escape_search, $escape_replace, $placeholder );
     }
 
     /**
-     * Attachment metadata filter.
+     * GCD
+     * https://en.wikipedia.org/wiki/Greatest_common_divisor
      *
-     * @param array $metadata - attachment meta data.
+     * @param int $width size.
+     * @param int $height size.
+     * @return float
+     */
+    public static function greatest_common_divisor( $width, $height ) {
+        return ( $width % $height ) ? self::greatest_common_divisor( $height, $width % $height ) : $height;
+    }
+
+    /**
+     * Get Aspect Ratio of real width and height
      *
+     * @param int $width size.
+     * @param int $height size.
      * @return array
      */
-    public static function generate_attachment_placeholder( $metadata ) {
-        // Generate image full size.
-        if ( isset( $metadata['width'] ) && isset( $metadata['height'] ) ) {
-            $metadata['placeholder'] = self::get_image_placeholder( $metadata['width'], $metadata['height'] );
-        }
+    public static function get_ratio( $width, $height ) {
+        $gcd = self::greatest_common_divisor( $width, $height );
 
-        // Generate image sizes.
-        if ( isset( $metadata['sizes'] ) ) {
-            foreach ( $metadata['sizes'] as $slug => & $size ) {
-                // Ignore lqip size.
-                if ( preg_match( '/powerkit-lqip/', $slug ) ) {
-                    continue;
-                }
-                // Ignore retina size.
-                if ( preg_match( '/-2x$/', $slug ) ) {
-                    continue;
-                }
-                if ( isset( $size['width'] ) && isset( $size['height'] ) ) {
-                    $size['placeholder'] = self::get_image_placeholder( $size['width'], $size['height'] );
-                }
-            }
-        }
-
-        return $metadata;
+        return array(
+            'width'  => $width / $gcd,
+            'height' => $height / $gcd,
+        );
     }
 
     /**
@@ -161,6 +181,10 @@ class Visual_Portfolio_Images {
      * @return array
      */
     public static function add_image_placeholders( $attr, $attachment, $size ) {
+        if ( ! self::is_enabled() ) {
+            return $attr;
+        }
+
         // Is string.
         if ( ! is_string( $size ) ) {
             return $attr;
@@ -172,7 +196,7 @@ class Visual_Portfolio_Images {
         }
 
         // Lazyload already added.
-        if ( strpos( $attr['class'], 'lazyload' ) !== false || isset( $attr['data-vpf-src'] ) ) {
+        if ( strpos( $attr['class'], 'lazyload' ) !== false || isset( $attr['data-vpf-src'] ) || isset( $attr['data-src'] ) ) {
             return $attr;
         }
 
@@ -186,21 +210,34 @@ class Visual_Portfolio_Images {
         }
 
         // Default Placeholder.
-        $placeholder = false;
+        $placeholder   = false;
+        $placeholder_w = false;
+        $placeholder_h = false;
 
         // The right Image Placeholder.
         $metadata = get_post_meta( $attachment_id, '_wp_attachment_metadata', true );
 
-        // generate new placeholder.
-        if ( ! isset( $metadata['placeholder'] ) ) {
-            $metadata = self::generate_attachment_placeholder( $metadata );
-            update_post_meta( $attachment_id, '_wp_attachment_metadata', $metadata );
+        // generate placeholder.
+        if ( isset( $metadata['sizes'][ $size ] ) && isset( $metadata['sizes'][ $size ]['width'] ) && isset( $metadata['sizes'][ $size ]['height'] ) ) {
+            $placeholder_w = $metadata['sizes'][ $size ]['width'];
+            $placeholder_h = $metadata['sizes'][ $size ]['height'];
+        } elseif ( isset( $metadata['width'] ) && isset( $metadata['height'] ) ) {
+            $placeholder_w = $metadata['width'];
+            $placeholder_h = $metadata['height'];
         }
 
-        if ( isset( $metadata['sizes'][ $size ]['placeholder'] ) ) {
-            $placeholder = $metadata['sizes'][ $size ]['placeholder'];
-        } elseif ( isset( $metadata['placeholder'] ) ) {
-            $placeholder = $metadata['placeholder'];
+        if ( $placeholder_w && $placeholder_h ) {
+            $placeholder = self::get_image_placeholder( $placeholder_w, $placeholder_h );
+        }
+
+        // Prevent WP Rocket lazy loading.
+        if ( defined( 'WP_ROCKET_VERSION' ) ) {
+            $attr['data-no-lazy'] = '1';
+        }
+
+        // Prevent WP Smush lazy loading.
+        if ( class_exists( 'WP_Smush' ) || class_exists( 'Smush\WP_Smush' ) ) {
+            $attr['class'] .= ' no-lazyload';
         }
 
         // lazy placeholder.
@@ -232,7 +269,7 @@ class Visual_Portfolio_Images {
      *
      * @return boolean
      */
-    public static function jetpack_lazy_images_skip_image_with_atttributes( $return, $attributes ) {
+    public static function jetpack_lazy_images_skip_image_with_attributes( $return, $attributes ) {
         return isset( $attributes['data-vpf-src'] );
     }
 }

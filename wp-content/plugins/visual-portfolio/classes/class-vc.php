@@ -35,7 +35,7 @@ class Visual_Portfolio_VC {
      */
     public function admin_enqueue_scripts( $page ) {
         if ( 'post.php' === $page || 'post-new.php' === $page ) {
-            wp_enqueue_script( 'visual-portfolio-vc-frontend', visual_portfolio()->plugin_url . 'assets/admin/js/vc-frontend.min.js', array( 'jquery' ) );
+            wp_enqueue_script( 'visual-portfolio-vc-frontend', visual_portfolio()->plugin_url . 'assets/admin/js/vc-frontend.min.js', array( 'jquery' ), '1.16.2', true );
         }
     }
 
@@ -48,13 +48,13 @@ class Visual_Portfolio_VC {
             // Don't use WP_Query on the admin side https://core.trac.wordpress.org/ticket/18408 .
             $vp_query = get_posts(
                 array(
-                    'post_type'       => 'vp_lists',
-	                // phpcs:ignore
-                    'posts_per_page'  => -1,
-                    'showposts'       => -1,
-                    'paged'           => -1,
+                    'post_type'      => 'vp_lists',
+                    'posts_per_page' => -1,
+                    'showposts'      => -1,
+                    'paged'          => -1,
                 )
             );
+
             $data_vc = array();
             foreach ( $vp_query as $post ) {
                 $data_vc[] = array( $post->ID, '#' . $post->ID . ' - ' . $post->post_title );
@@ -62,14 +62,14 @@ class Visual_Portfolio_VC {
 
             vc_map(
                 array(
-                    'name' => esc_html__( 'Visual Portfolio', 'visual-portfolio' ),
-                    'base' => 'visual_portfolio',
+                    'name'     => esc_html__( 'Visual Portfolio', 'visual-portfolio' ),
+                    'base'     => 'visual_portfolio',
                     'controls' => 'full',
                     'icon'     => 'icon-visual-portfolio',
-                    'params' => array(
+                    'params'   => array(
                         array(
                             'type'        => 'dropdown',
-                            'heading'     => esc_html__( 'Select visual portfolio', 'visual-portfolio' ),
+                            'heading'     => esc_html__( 'Select Layout', 'visual-portfolio' ),
                             'param_name'  => 'id',
                             'value'       => $data_vc,
                             'description' => '',

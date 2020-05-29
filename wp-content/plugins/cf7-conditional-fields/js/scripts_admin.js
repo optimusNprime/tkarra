@@ -8,8 +8,8 @@ if ($wpcf7cf_new_entry.length > 0) {
     var wpcf7cf_new_and_rule_html = $wpcf7cf_new_entry.find('.wpcf7cf-and-rule')[0].outerHTML;
     var wpcf7cf_new_entry_html = $wpcf7cf_new_entry.html();
 
-    var cf_rule_regex = /(?:show \[([^\]]*?)\]) if \[([^\]]*?)\] (?:(equals \(regex\)|not equals \(regex\)|equals|not equals|greater than or equals|greater than|less than or equals|less than|is empty|not empty)(?: \"(.*)\")?)/g;
-    var cf_rule_regex_and = /and if \[([^\]]*?)\] (?:(equals \(regex\)|not equals \(regex\)|equals|not equals|greater than or equals|greater than|less than or equals|less than|is empty|not empty)(?: \"(.*)\")?)/g;
+    var cf_rule_regex = /(?:show \[([^\]]*?)\]) if \[([^\]]*?)\] (?:(equals \(regex\)|not equals \(regex\)|equals|not equals|greater than or equals|greater than|less than or equals|less than|is empty|not empty|function)(?: \"(.*)\")?)/g;
+    var cf_rule_regex_and = /and if \[([^\]]*?)\] (?:(equals \(regex\)|not equals \(regex\)|equals|not equals|greater than or equals|greater than|less than or equals|less than|is empty|not empty|function)(?: \"(.*)\")?)/g;
 
 
     if (_wpcf7 == null) { var _wpcf7 = wpcf7}; // wpcf7 4.8 fix

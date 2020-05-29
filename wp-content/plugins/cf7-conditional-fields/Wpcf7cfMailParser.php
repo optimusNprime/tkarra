@@ -53,7 +53,8 @@ class Wpcf7cfMailParser {
 
             for ($i=1; $i<=$num_subs; $i++) {
 				$str = preg_replace(["/\[{$original_name}\:index[^\]]*?\]/"],$i,$inner_template);
-                echo str_replace(']','__'.$i.']',$str);
+                //echo str_replace(']','__'.$i.']',$str);
+				echo preg_replace("/\[([^\s^\]]*?)([\s\]]+)([^\]]*?)/", "[$1__{$i}$2",$str);
             }
 
             $underscored_content = ob_get_clean();

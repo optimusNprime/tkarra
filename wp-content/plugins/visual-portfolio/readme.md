@@ -1,24 +1,24 @@
 # Visual Portfolio #
 
 * Contributors: nko
-* Tags: portfolio, gallery, works, masonry, popup
+* Tags: portfolio, gallery, image, masonry, popup
 * Requires at least: 4.0.0
-* Tested up to: 5.1
-* Requires PHP: 5.4
-* Stable tag: 1.10.0
+* Tested up to: 5.3
+* Requires PHP: 5.5.9
+* Stable tag: 1.16.2
 * License: GPLv2 or later
-* License URI: http://www.gnu.org/licenses/gpl-2.0.html
+* License URI: <http://www.gnu.org/licenses/gpl-2.0.html>
 
-Portfolio layouts visual editor. Masonry, justified, tiles, carousel, slider, coverflow, custom posts, custom images.
+Portfolio layouts visual editor. Masonry, justified, tiles, carousel, slider, coverflow, custom posts, custom image galleries.
 
 ## Description ##
 
-Visual Portfolio let you create beautiful portfolio layouts. Generates shortcode to show portfolio or any custom post types using Masonry, Justified, Tiles or Carousel layouts.
+Visual Portfolio let you create beautiful portfolio layouts and image galleries. Generates shortcode to show portfolio or any custom post types using Masonry, Justified, Tiles or Carousel layouts.
 
 ### Links ###
 
-* [Live Demo](https://wp.nkdev.info/free-visual-portfolio/)
-* [Documentation](https://wp.nkdev.info/free-visual-portfolio/documentation/getting-started/)
+* [Live Demo](https://visualportfolio.co/)
+* [Documentation](https://visualportfolio.co/documentation/getting-started/)
 * [GitHub](https://github.com/nk-o/visual-portfolio)
 
 ## Features ##
@@ -40,6 +40,7 @@ Visual Portfolio let you create beautiful portfolio layouts. Generates shortcode
 * Load More
 * Paged layouts
 * Filtering
+* Sorting
 * Popup gallery (YouTube and Vimeo supported)
 * Custom item gutters
 * Stretch option (if you want to break the fixed container of the page)
@@ -51,14 +52,16 @@ Visual Portfolio let you create beautiful portfolio layouts. Generates shortcode
   * Custom order
 * Custom CSS for each portfolio layouts
 * Shortcode generated, so you can place unlimited portfolio layouts on the page
-* Gutenberg WordPress builder supported
-* WPBakery Page Builder page builder supported
+* Gutenberg WordPress builder support
+* Elementor Page Builder support
+* WPBakery Page Builder support
 
 ## Real Usage Examples ##
 
-* [Skylith - Multipurpose Gutenberg Theme](https://demo.nkdev.info/#skylith)
-* [Piroll - Portfolio Theme](https://demo.nkdev.info/#piroll)
-* [Snow - Portfolio Theme](https://demo.nkdev.info/#snow)
+* [SquadForce - eSports Gaming WordPress Theme](https://wp.nkdev.info/squadforce/)
+* [Skylith - Multipurpose Gutenberg Theme](https://wp.nkdev.info/skylith/)
+* [Piroll - Portfolio Theme](https://wp.nkdev.info/piroll/)
+* [Snow - Portfolio Theme](https://wp.nkdev.info/snow/)
 
 ## Screenshots ##
 
@@ -93,33 +96,181 @@ The manual installation method involves downloading our Visual Portfolio plugin 
 
 ### How to disable enqueued plugins (JS, CSS) on frontend ####
 
-[https://wp.nkdev.info/free-visual-portfolio/documentation/developers/disable-enqueued-plugins-js-css/](https://wp.nkdev.info/free-visual-portfolio/documentation/developers/disable-enqueued-plugins-js-css/)
+[https://visualportfolio.co/documentation/developers/disable-enqueued-plugins-js-css/](https://visualportfolio.co/documentation/developers/disable-enqueued-plugins-js-css/)
 
 ### How to use my custom taxonomy as filter ####
 
-[https://wp.nkdev.info/free-visual-portfolio/documentation/developers/custom-taxonomy-for-filter/](https://wp.nkdev.info/free-visual-portfolio/documentation/developers/custom-taxonomy-for-filter/)
+[https://visualportfolio.co/documentation/developers/custom-taxonomy-for-filter/](https://visualportfolio.co/documentation/developers/custom-taxonomy-for-filter/)
 
 ### How to change default templates and styles ####
 
-[https://wp.nkdev.info/free-visual-portfolio/documentation/developers/changing-default-templates-and-styles/](https://wp.nkdev.info/free-visual-portfolio/documentation/developers/changing-default-templates-and-styles/)
+[https://visualportfolio.co/documentation/developers/changing-default-templates-and-styles/](https://visualportfolio.co/documentation/developers/changing-default-templates-and-styles/)
 
 ### DEV: WP filters ####
 
-[https://wp.nkdev.info/free-visual-portfolio/documentation/developers/wordpress-filters/](https://wp.nkdev.info/free-visual-portfolio/documentation/developers/wordpress-filters/)
+[https://visualportfolio.co/documentation/developers/wordpress-filters/](https://visualportfolio.co/documentation/developers/wordpress-filters/)
 
 ### DEV: Controls ####
 
-[https://wp.nkdev.info/free-visual-portfolio/documentation/developers/wordpress-filters/controls/](https://wp.nkdev.info/free-visual-portfolio/documentation/developers/wordpress-filters/controls/)
+[https://visualportfolio.co/documentation/developers/wordpress-filters/controls/](https://visualportfolio.co/documentation/developers/wordpress-filters/controls/)
 
 ### DEV: jQuery events ####
 
-[https://wp.nkdev.info/free-visual-portfolio/documentation/developers/jquery-events/](https://wp.nkdev.info/free-visual-portfolio/documentation/developers/jquery-events/)
+[https://visualportfolio.co/documentation/developers/jquery-events/](https://visualportfolio.co/documentation/developers/jquery-events/)
 
 ### DEV: jQuery methods ####
 
-[https://wp.nkdev.info/free-visual-portfolio/documentation/developers/jquery-methods/](https://wp.nkdev.info/free-visual-portfolio/documentation/developers/jquery-methods/)
+[https://visualportfolio.co/documentation/developers/jquery-methods/](https://visualportfolio.co/documentation/developers/jquery-methods/)
 
 ## Changelog ##
+
+= 1.16.2 =
+
+* preview moved to `templates/preview`, so you can override it from themes
+* use base64 for placeholders
+* fixed posts output when taxonomies relation set to AND and no taxonomies selected
+* fixed Grid JS error if used old Isotope script (for example in Bridge theme)
+* fixed notices in PHP 7.4
+
+= 1.16.1 =
+
+* added style fixes for some Twenty themes
+* added :focus styles in templates, where used :hover
+* disable filter output if no taxonomies found
+* reverted back taxonomies public queryable (users used it for permalinks)
+* fixed grid layout position calculation after filtering
+* fixed PhotoSwipe jQuery is not a function error
+
+= 1.16.0 =
+
+* added preview preloader in layouts editor
+* added imagesloaded after AJAX loaded event (fixes Safari images stacking)
+* changed images placeholders to SVG (less code, better performance)
+* prevent ajax loading if requested URL is currently loaded
+* fixed Avoid Duplicate Posts option if used Post-Based with Custom Post IDs
+* fixed WP Smush lazyload conflict
+* fixed infinite scroll loading 2 next pages at a time
+* fixed Grid items position in FireFox
+* fixed stretch option usage in preview (just disable it)
+* fixed Elementor widget output on frontend
+* fixed post-based taxonomies when posts don't contain it
+* fixed AMP plugin integration PHP notices
+* fixed AJAX loading with changed layout settings in editor preview
+* fixed error in layouts preview when no items loaded
+* a lot of code improvements for upcoming PRO plugin
+
+= 1.15.1 =
+
+* fixed errors when upload images without width or height (for example, SVG)
+
+= 1.15.0 =
+
+* added widget for Elementor
+* added settings to change popup gallery background color
+* added support for checkboxes and toggles in custom controls styles (needed for custom items styles)
+* added tree of nodes with classes to better coding in Layouts Custom CSS
+* better Gutenberg block preview (no more transform scale for iframe)
+* fixed Video Post Format URL metabox display in Gutenberg
+* fixed Video Popup in post with format video, but without post thumbnail
+* fixed layouts editor styles loading bug when browser tab is not active
+* additional attributes for taxonomies in templates
+
+= 1.14.1 =
+
+* added jQuery events for PhotoSwipe and Fancybox <https://visualportfolio.co/documentation/developers/jquery-events/>
+* fixed carousel responsive bug since new Swiper v5
+
+= 1.14.0 =
+
+* added settings to change registered image sizes
+* added info about sort shortcode in Layouts metaboxes
+* improved assets loader (load only required css and js)
+* changed PhotoSwipe A tags to Buttons
+* removed height limitation for Images control in Layouts editor
+* fixed slider thumbnails ajax loading
+* fixed tiles wrong position calculation
+* fixed Isotope re-layout when WPBakery Page Builder resized full-width row
+* updated FontAwesome
+* updated LazySizes
+* updated Swiper (no more Internet Explorer support)
+
+= 1.13.2 =
+
+* fixed incorrect post date if something filters it (for example Events Manager plugin). Thanks to <https://wordpress.org/support/topic/date-problem-with-events-and-1-13-1-version/>
+
+= 1.13.1 =
+
+* updated FontAwesome
+* fixed portfolio inside Tabs and Accordions
+* fixed Editor role capabilities (add a possibility to manage portfolio items)
+* fixed published date output for Content Source -> Images
+* fixed Gutenberg block list of all available layouts
+
+= 1.13.0 =
+
+* added Fancybox support
+* added option to avoid posts duplication
+* added posts classes (such as hentry) on portfolio items
+* added options to load images title and description automatically from meta data
+* added support for WP Smush and WP Rocket lazy loading options
+* added Items Minimal Height option for Slider layout
+* added new WordPress filters:
+  * `vpf_extend_image_controls`
+  * `vpf_extend_query_args`
+  * `vpf_extend_filter_items`
+  * `vpf_extend_sort_items`
+* improved placeholders function performance
+* changed single post tag to `artricle`
+* prevent lazy loading if `data-src` attribute already added on the image (fixed conflicts with some 3rd-party plugins)
+* prevent lazy loading on AMP pages
+* fixed Jetpack `jetpack_lazy_images_skip_image_with_attributes` filter name
+
+= 1.12.2 =
+
+* fixed tiles size on small screens
+* fixed fly effect position (on 4k screens slightly visible part of overlay)
+
+= 1.12.1 =
+
+* fixed Vimeo and other vendors video popup loading
+* fixed Tiles sometimes wrong position calculation (for example in `2|2,1|1,1|1,1|`)
+* fixed overlay position bug in default theme in Fade and Fly effects
+
+= 1.12.0 =
+
+* changed video oembed loading method
+  * no more php oembed since it may be too heavy to load pages (used JS instead)
+  * no more video thumbnail loading if no featured image specified in post
+* fixed portfolio categories and tags capabilities
+* fixed &lt;a&gt; tag in fly and fade effect when all meta disabled
+
+= 1.11.1 =
+
+* fixed FireFox image blinking in Fade effect
+* fixed name of sorting by date items ('newest' is actually 'oldest')
+* fixed conflict with elementor carousel event
+* fixed conflict with SG Optimizer (remove noscript tag)
+* fixed w3 validation errors (figcaption tag may only be a child of figure tag)
+
+= 1.11.0 =
+
+* added Sort controls
+* added Filter and Sort Dropdown styles
+* added 'Portfolio Manager' and 'Portfolio Author' roles
+* added portfolio custom taxonomies filter in admin page
+* added slider thumbnails support
+* added images and show it if javascript disabled (mostly for screen readers)
+* added photoswipe zoom effect
+* disabled image popup on items with custom URL
+* moved popup title and description settings to Layouts options
+* changed popup gallery tap actions (don't close on tap and toggle popup controls instead)
+* fixed Elementor popup gallery conflict
+* fixed roles for portfolio post types
+* fixed IE carousel items invisible
+* fixed items gap conflict with Elementor
+* fixed carousel "Slides per view" auto option with static or dynamic "Items height" option
+* fixed slider fade effect + default items style items width
+* fixed rtl admin layout styles
 
 = 1.10.0 =
 
@@ -230,7 +381,7 @@ Note: Don't forget to clear cache after plugin update. Changed portfolios with p
 = 1.6.5 =
 
 * added options for texts in filter and pagination
-* fixed paged /portfolio/ page (https://wordpress.org/support/topic/paging-infinite-loading-not-working/)
+* fixed paged /portfolio/ page (<https://wordpress.org/support/topic/paging-infinite-loading-not-working/>)
 * fixed vertical images quality
 * fixed conflict with Jetpack lazy
 * fixed filter shortcode output
@@ -245,7 +396,7 @@ Note: Don't forget to clear cache after plugin update. Changed portfolios with p
 * changed portfolio default image sizes (since we use Lazyload, we can use larger image sizes)
 * updated FontAwesome to 5.2.0
 * fixed Slider styles when used 2 sliders on the page
-* removed imagesloaded dependelcy
+* removed imagesloaded dependency
 * disabled 'with_front' in portfolio post type (thanks to [https://wordpress.org/support/topic/change-the-permalink-structure-2/](https://wordpress.org/support/topic/change-the-permalink-structure-2/))
 
 = 1.6.2 =

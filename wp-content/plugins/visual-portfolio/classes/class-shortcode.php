@@ -20,6 +20,7 @@ class Visual_Portfolio_Shortcode {
         // add shortcode.
         add_shortcode( 'visual_portfolio', array( $this, 'get_shortcode_out' ) );
         add_shortcode( 'visual_portfolio_filter', array( $this, 'get_shortcode_filter_out' ) );
+        add_shortcode( 'visual_portfolio_sort', array( $this, 'get_shortcode_sort_out' ) );
     }
 
     /**
@@ -34,7 +35,8 @@ class Visual_Portfolio_Shortcode {
                 'id'     => '',
                 'class'  => '',
                 'vc_css' => '',
-            ), $atts
+            ),
+            $atts
         );
 
         return Visual_Portfolio_Get::get( $atts );
@@ -49,14 +51,35 @@ class Visual_Portfolio_Shortcode {
     public function get_shortcode_filter_out( $atts = array() ) {
         $atts = shortcode_atts(
             array(
-                'id'     => '',
-                'type'   => 'default',
-                'align'  => 'center',
+                'id'         => '',
+                'type'       => 'default',
+                'align'      => 'center',
                 'show_count' => false,
-                'class'  => '',
-            ), $atts
+                'class'      => '',
+            ),
+            $atts
         );
 
         return Visual_Portfolio_Get::get_filter( $atts );
+    }
+
+    /**
+     * Shortcode Sort Output
+     *
+     * @param array $atts shortcode attributes.
+     * @return string
+     */
+    public function get_shortcode_sort_out( $atts = array() ) {
+        $atts = shortcode_atts(
+            array(
+                'id'    => '',
+                'type'  => 'default',
+                'align' => 'center',
+                'class' => '',
+            ),
+            $atts
+        );
+
+        return Visual_Portfolio_Get::get_sort( $atts );
     }
 }

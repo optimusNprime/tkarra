@@ -2,7 +2,7 @@
 /**
  * Plugin Name:  Visual Portfolio
  * Description:  Portfolio post type with visual editor
- * Version:      1.10.0
+ * Version:      1.16.2
  * Author:       nK
  * Author URI:   https://nkdev.info
  * License:      GPLv2 or later
@@ -23,21 +23,21 @@ class Visual_Portfolio {
     /**
      * The single class instance.
      *
-     * @var $_instance
+     * @var $instance
      */
-    private static $_instance = null;
+    private static $instance = null;
 
     /**
      * Main Instance
      * Ensures only one instance of this class exists in memory at any one time.
      */
     public static function instance() {
-        if ( is_null( self::$_instance ) ) {
-            self::$_instance = new self();
-            self::$_instance->init_options();
-            self::$_instance->init_hooks();
+        if ( is_null( self::$instance ) ) {
+            self::$instance = new self();
+            self::$instance->init_options();
+            self::$instance->init_hooks();
         }
-        return self::$_instance;
+        return self::$instance;
     }
 
     /**
@@ -94,16 +94,16 @@ class Visual_Portfolio {
      */
     public function init_options() {
         $this->plugin_path = plugin_dir_path( __FILE__ );
-        $this->plugin_url = plugin_dir_url( __FILE__ );
+        $this->plugin_url  = plugin_dir_url( __FILE__ );
 
         // load textdomain.
         load_plugin_textdomain( 'visual-portfolio', false, basename( dirname( __FILE__ ) ) . '/languages' );
 
-        // register images sizes.
-        $this->add_image_sizes();
-
         // include helper files.
         $this->include_dependencies();
+
+        // register images sizes.
+        $this->add_image_sizes();
 
         // init classes.
         new Visual_Portfolio_Settings();
@@ -114,6 +114,7 @@ class Visual_Portfolio {
         new Visual_Portfolio_Admin();
         new Visual_Portfolio_TinyMCE();
         new Visual_Portfolio_VC();
+        new Visual_Portfolio_Elementor();
     }
 
     /**
@@ -121,10 +122,6 @@ class Visual_Portfolio {
      */
     public function init_hooks() {
         add_action( 'admin_init', array( $this, 'admin_init' ) );
-
-        // template_redirect is used instead of wp_enqueue_scripts just because some plugins use it and included an old isotope plugin. So, it was conflicted.
-        add_action( 'template_redirect', array( $this, 'register_scripts' ), 9 );
-        add_action( 'wp_enqueue_scripts', array( $this, 'wp_enqueue_scripts' ), 9 );
     }
 
     /**
@@ -142,117 +139,14 @@ class Visual_Portfolio {
     }
 
     /**
-     * Register scripts that will be used in the future when portfolio will be printed.
-     */
-    public function register_scripts() {
-        $vp_deps = array( 'jquery', 'imagesloaded' );
-        $vp_style_deps = array();
-
-        // Isotope.
-        if ( apply_filters( 'vpf_enqueue_plugin_isotope', true ) ) {
-            wp_register_script( 'isotope', visual_portfolio()->plugin_url . 'assets/vendor/isotope/isotope.pkgd.min.js', array( 'jquery' ), '3.0.6', true );
-
-            $vp_deps[] = 'isotope';
-        }
-
-        // fjGallery.
-        if ( apply_filters( 'vpf_enqueue_plugin_flickr_justified_gallery', true ) ) {
-            wp_register_script( 'flickr-justified-gallery', visual_portfolio()->plugin_url . 'assets/vendor/flickr-justified-gallery/fjGallery.min.js', array( 'jquery' ), '1.0.2', true );
-
-            $vp_deps[] = 'flickr-justified-gallery';
-        }
-
-        // Object Fit Images.
-        if ( apply_filters( 'vpf_enqueue_plugin_object_fit_images', true ) ) {
-            wp_register_script( 'object-fit-images', visual_portfolio()->plugin_url . 'assets/vendor/object-fit-images/ofi.min.js', '', '3.2.4', true );
-
-            $vp_deps[] = 'object-fit-images';
-        }
-
-        // PhotoSwipe.
-        if ( apply_filters( 'vpf_enqueue_plugin_photoswipe', true ) ) {
-            wp_register_style( 'photoswipe', visual_portfolio()->plugin_url . 'assets/vendor/photoswipe/photoswipe.css', '', '4.1.2' );
-            wp_register_style( 'photoswipe-default-skin', visual_portfolio()->plugin_url . 'assets/vendor/photoswipe/default-skin/default-skin.css', array( 'photoswipe' ), '4.1.2' );
-            wp_register_script( 'photoswipe', visual_portfolio()->plugin_url . 'assets/vendor/photoswipe/photoswipe.min.js', '', '4.1.2', true );
-            wp_register_script( 'photoswipe-ui-default', visual_portfolio()->plugin_url . 'assets/vendor/photoswipe/photoswipe-ui-default.min.js', array( 'photoswipe' ), '4.1.2', true );
-
-            $vp_deps[] = 'photoswipe-ui-default';
-            $vp_style_deps[] = 'photoswipe-default-skin';
-        }
-
-        // Swiper.
-        if ( apply_filters( 'vpf_enqueue_plugin_swiper', true ) ) {
-            wp_register_style( 'swiper', visual_portfolio()->plugin_url . 'assets/vendor/swiper/css/swiper.min.css', '', '4.4.2' );
-            wp_register_script( 'swiper', visual_portfolio()->plugin_url . 'assets/vendor/swiper/js/swiper.min.js', '', '4.4.2', true );
-
-            $vp_deps[] = 'swiper';
-            $vp_style_deps[] = 'swiper';
-        }
-
-        // Font Awesome.
-        if ( apply_filters( 'vpf_enqueue_plugin_font_awesome', true ) ) {
-            wp_register_script( 'font-awesome-v4-shims', visual_portfolio()->plugin_url . 'assets/vendor/font-awesome/v4-shims.min.js', array(), '5.5.0', true );
-            wp_register_script( 'font-awesome', visual_portfolio()->plugin_url . 'assets/vendor/font-awesome/all.min.js', array( 'font-awesome-v4-shims' ), '5.5.0', true );
-
-            $vp_deps[] = 'font-awesome';
-        }
-
-        // LazySizes.
-        if ( apply_filters( 'vpf_enqueue_plugin_lazysizes', true ) ) {
-            wp_register_script( 'lazysizes-object-fit-cover', visual_portfolio()->plugin_url . 'assets/js/lazysizes-object-fit-cover.min.js', array(), '4.1.0', true );
-            wp_register_script( 'lazysizes', visual_portfolio()->plugin_url . 'assets/vendor/lazysizes/lazysizes.min.js', array(), '4.1.4', true );
-
-            $vp_deps[] = 'lazysizes-object-fit-cover';
-            $vp_deps[] = 'lazysizes';
-        }
-
-        // Visual Portfolio.
-        wp_register_script( 'visual-portfolio', visual_portfolio()->plugin_url . 'assets/js/script.min.js', $vp_deps, '1.10.0', true );
-        wp_register_style( 'visual-portfolio', visual_portfolio()->plugin_url . 'assets/css/style.min.css', $vp_style_deps, '1.10.0' );
-
-        // Visual Portfolio data.
-        $data_init = array(
-            '__' => array(
-                'couldnt_retrieve_vp' => esc_attr( 'Couldn\'t retrieve Visual Portfolio ID.', 'visual-portfolio' ),
-                'pswp_close' => esc_attr( 'Close (Esc)', 'visual-portfolio' ),
-                'pswp_share' => esc_attr( 'Share', 'visual-portfolio' ),
-                'pswp_fs' => esc_attr( 'Toggle fullscreen', 'visual-portfolio' ),
-                'pswp_zoom' => esc_attr( 'Zoom in/out', 'visual-portfolio' ),
-                'pswp_prev' => esc_attr( 'Previous (arrow left)', 'visual-portfolio' ),
-                'pswp_next' => esc_attr( 'Next (arrow right)', 'visual-portfolio' ),
-                'pswp_share_fb' => esc_attr( 'Share on Facebook', 'visual-portfolio' ),
-                'pswp_share_tw' => esc_attr( 'Tweet', 'visual-portfolio' ),
-                'pswp_share_pin' => esc_attr( 'Pin it', 'visual-portfolio' ),
-            ),
-            'settingsPopupGallery' => array(
-                'show_arrows'            => Visual_Portfolio_Settings::get_option( 'show_arrows', 'vp_popup_gallery', true ),
-                'show_caption'           => Visual_Portfolio_Settings::get_option( 'show_caption', 'vp_popup_gallery', true ),
-                'show_counter'           => Visual_Portfolio_Settings::get_option( 'show_counter', 'vp_popup_gallery', true ),
-                'show_zoom_button'       => Visual_Portfolio_Settings::get_option( 'show_zoom_button', 'vp_popup_gallery', true ),
-                'show_fullscreen_button' => Visual_Portfolio_Settings::get_option( 'show_fullscreen_button', 'vp_popup_gallery', true ),
-                'show_share_button'      => Visual_Portfolio_Settings::get_option( 'show_share_button', 'vp_popup_gallery', true ),
-                'show_close_button'      => Visual_Portfolio_Settings::get_option( 'show_close_button', 'vp_popup_gallery', true ),
-            ),
-        );
-        wp_localize_script( 'visual-portfolio', 'VPData', $data_init );
-    }
-
-    /**
-     * Enqueue main style to prevent first-page load layout issues if the page contains portfolio.
-     */
-    public function wp_enqueue_scripts() {
-        wp_enqueue_style( 'visual-portfolio' );
-    }
-
-    /**
      * Init variables
      */
     public function admin_init() {
         // get current plugin data.
-        $data = get_plugin_data( __FILE__ );
-        $this->plugin_name = $data['Name'];
-        $this->plugin_version = $data['Version'];
-        $this->plugin_slug = plugin_basename( __FILE__, '.php' );
+        $data                        = get_plugin_data( __FILE__ );
+        $this->plugin_name           = $data['Name'];
+        $this->plugin_version        = $data['Version'];
+        $this->plugin_slug           = plugin_basename( __FILE__, '.php' );
         $this->plugin_name_sanitized = basename( __FILE__, '.php' );
     }
 
@@ -260,11 +154,23 @@ class Visual_Portfolio {
      * Add image sizes.
      */
     public function add_image_sizes() {
+        $sm       = Visual_Portfolio_Settings::get_option( 'sm', 'vp_images', false ) ? Visual_Portfolio_Settings::get_option( 'sm', 'vp_images', false ) : 500;
+        $md       = Visual_Portfolio_Settings::get_option( 'md', 'vp_images', false ) ? Visual_Portfolio_Settings::get_option( 'md', 'vp_images', false ) : 800;
+        $lg       = Visual_Portfolio_Settings::get_option( 'lg', 'vp_images', false ) ? Visual_Portfolio_Settings::get_option( 'lg', 'vp_images', false ) : 1280;
+        $xl       = Visual_Portfolio_Settings::get_option( 'xl', 'vp_images', false ) ? Visual_Portfolio_Settings::get_option( 'xl', 'vp_images', false ) : 1920;
+        $sm_popup = Visual_Portfolio_Settings::get_option( 'sm_popup', 'vp_images', false ) ? Visual_Portfolio_Settings::get_option( 'sm_popup', 'vp_images', false ) : 500;
+        $md_popup = Visual_Portfolio_Settings::get_option( 'md_popup', 'vp_images', false ) ? Visual_Portfolio_Settings::get_option( 'md_popup', 'vp_images', false ) : 800;
+        $xl_popup = Visual_Portfolio_Settings::get_option( 'xl_popup', 'vp_images', false ) ? Visual_Portfolio_Settings::get_option( 'xl_popup', 'vp_images', false ) : 1920;
+
         // custom image sizes.
-        add_image_size( 'vp_sm', 500, 500 );
-        add_image_size( 'vp_md', 800, 800 );
-        add_image_size( 'vp_lg', 1280, 1280 );
-        add_image_size( 'vp_xl', 1920, 1920 );
+        add_image_size( 'vp_sm', $sm, $sm );
+        add_image_size( 'vp_md', $md, $md );
+        add_image_size( 'vp_lg', $lg, $lg );
+        add_image_size( 'vp_xl', $xl, $xl );
+        add_image_size( 'vp_sm_popup', $sm_popup, $sm_popup );
+        add_image_size( 'vp_md_popup', $md_popup, $md_popup );
+        add_image_size( 'vp_xl_popup', $xl_popup, $xl_popup );
+
         add_filter( 'image_size_names_choose', array( $this, 'image_size_names_choose' ) );
     }
 
@@ -277,7 +183,8 @@ class Visual_Portfolio {
      */
     public function image_size_names_choose( $sizes ) {
         return array_merge(
-            $sizes, array(
+            $sizes,
+            array(
                 'vp_sm' => esc_html__( 'Small (VP)', 'visual-portfolio' ),
                 'vp_md' => esc_html__( 'Medium (VP)', 'visual-portfolio' ),
                 'vp_lg' => esc_html__( 'Large (VP)', 'visual-portfolio' ),
@@ -290,17 +197,21 @@ class Visual_Portfolio {
      * Include dependencies
      */
     private function include_dependencies() {
-        require_once( $this->plugin_path . 'classes/class-extend.php' );
-        require_once( $this->plugin_path . 'classes/class-images.php' );
-        require_once( $this->plugin_path . 'classes/class-settings.php' );
-        require_once( $this->plugin_path . 'classes/class-rest.php' );
-        require_once( $this->plugin_path . 'classes/class-get-portfolio.php' );
-        require_once( $this->plugin_path . 'classes/class-shortcode.php' );
-        require_once( $this->plugin_path . 'classes/class-preview.php' );
-        require_once( $this->plugin_path . 'classes/class-admin.php' );
-        require_once( $this->plugin_path . 'classes/class-controls.php' );
-        require_once( $this->plugin_path . 'classes/class-tinymce.php' );
-        require_once( $this->plugin_path . 'classes/class-vc.php' );
+        require_once $this->plugin_path . 'classes/class-assets.php';
+        require_once $this->plugin_path . 'classes/class-extend.php';
+        require_once $this->plugin_path . 'classes/class-images.php';
+        require_once $this->plugin_path . 'classes/class-settings.php';
+        require_once $this->plugin_path . 'classes/class-rest.php';
+        require_once $this->plugin_path . 'classes/class-get-portfolio.php';
+        require_once $this->plugin_path . 'classes/class-shortcode.php';
+        require_once $this->plugin_path . 'classes/class-preview.php';
+        require_once $this->plugin_path . 'classes/class-admin.php';
+        require_once $this->plugin_path . 'classes/class-controls.php';
+        require_once $this->plugin_path . 'classes/class-tinymce.php';
+        require_once $this->plugin_path . 'classes/class-vc.php';
+        require_once $this->plugin_path . 'classes/class-elementor.php';
+        require_once $this->plugin_path . 'classes/class-supported-themes.php';
+        require_once $this->plugin_path . 'classes/class-migration.php';
     }
 
     /**
@@ -332,6 +243,29 @@ class Visual_Portfolio {
     }
 
     /**
+     * Find css template file
+     *
+     * @param string $template_name file name.
+     * @return string
+     */
+    public function find_template_styles( $template_name ) {
+        $template = '';
+
+        if ( file_exists( get_stylesheet_directory() . '/visual-portfolio/' . $template_name . '.css' ) ) {
+            // Child Theme (or just theme).
+            $template = trailingslashit( get_stylesheet_directory_uri() ) . 'visual-portfolio/' . $template_name . '.css';
+        } elseif ( file_exists( get_template_directory() . '/visual-portfolio/' . $template_name . '.css' ) ) {
+            // Parent Theme (when parent exists).
+            $template = trailingslashit( get_template_directory_uri() ) . 'visual-portfolio/' . $template_name . '.css';
+        } elseif ( file_exists( $this->plugin_path . 'templates/' . $template_name . '.css' ) ) {
+            // Default file in plugin folder.
+            $template = $this->plugin_url . 'templates/' . $template_name . '.css';
+        }
+
+        return $template;
+    }
+
+    /**
      * Include template style
      *
      * @param string           $handle style handle name.
@@ -341,17 +275,11 @@ class Visual_Portfolio {
      * @param string           $media media string.
      */
     public function include_template_style( $handle, $template_name, $deps = array(), $ver = false, $media = 'all' ) {
-        $template = '';
+        $template = $this->find_template_styles( $template_name );
 
-        if ( file_exists( get_stylesheet_directory() . '/visual-portfolio/' . $template_name . '.css' ) ) {
-            // Child Theme (or just theme).
-            $template = trailingslashit( get_stylesheet_directory_uri() ) . 'visual-portfolio/' . $template_name . '.css';
-        } else if ( file_exists( get_template_directory() . '/visual-portfolio/' . $template_name . '.css' ) ) {
-            // Parent Theme (if parent exists).
-            $template = trailingslashit( get_template_directory_uri() ) . 'visual-portfolio/' . $template_name . '.css';
-        } else if ( file_exists( $this->plugin_path . 'templates/' . $template_name . '.css' ) ) {
-            // Default file in plugin folder.
-            $template = $this->plugin_url . 'templates/' . $template_name . '.css';
+        // maybe find minified style.
+        if ( ! $template ) {
+            $template = $this->find_template_styles( $template_name . '.min' );
         }
 
         // Allow 3rd party plugin filter template file from their plugin.
@@ -372,8 +300,15 @@ class Visual_Portfolio {
      * @return array|bool|false|object
      */
     public function get_oembed_data( $url, $width = null, $height = null ) {
+        $cache_name = 'vp_oembed_data_' . $url . ( $width ? $width : '' ) . ( $height ? $height : '' );
+        $cached     = get_transient( $cache_name );
+
+        if ( $cached ) {
+            return $cached;
+        }
+
         if ( function_exists( '_wp_oembed_get_object' ) ) {
-            require_once( ABSPATH . WPINC . '/class-oembed.php' );
+            require_once ABSPATH . WPINC . '/class-oembed.php';
         }
 
         $args = array();
@@ -392,9 +327,9 @@ class Visual_Portfolio {
             $args['width'] = $height * ( 1920 / 1080 );
         }
 
-        $oembed = _wp_oembed_get_object();
+        $oembed   = _wp_oembed_get_object();
         $provider = $oembed->get_provider( $url, $args );
-        $data = $oembed->fetch( $provider, $url, $args );
+        $data     = $oembed->fetch( $provider, $url, $args );
 
         if ( $data ) {
             $data = (array) $data;
@@ -404,8 +339,13 @@ class Visual_Portfolio {
             if ( ! isset( $data['provider'] ) ) {
                 $data['provider'] = $provider;
             }
+
             // Convert url to hostname, eg: "youtube" instead of "https://youtube.com/".
             $data['provider-name'] = pathinfo( str_replace( array( 'www.' ), '', parse_url( $url, PHP_URL_HOST ) ), PATHINFO_FILENAME );
+
+            // save cache.
+            set_transient( $cache_name, $data, DAY_IN_SECONDS );
+
             return $data;
         }
 

@@ -11,6 +11,7 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
+// phpcs:ignore
 $show_meta = $opts['show_title'] && $args['title'] ||
     $opts['show_date'] ||
     $opts['show_excerpt'] && $args['excerpt'] ||
@@ -18,9 +19,9 @@ $show_meta = $opts['show_title'] && $args['title'] ||
 
 ?>
 
-<div class="vp-portfolio__item-overlay vp-portfolio__item-align-<?php echo esc_attr( $opts['align'] ); ?>">
+<figcaption class="vp-portfolio__item-overlay vp-portfolio__item-align-<?php echo esc_attr( $opts['align'] ); ?>">
     <?php if ( $show_meta ) : ?>
-        <figcaption class="vp-portfolio__item-meta">
+        <div class="vp-portfolio__item-meta">
             <?php
 
             // Show Title.
@@ -73,7 +74,10 @@ $show_meta = $opts['show_title'] && $args['title'] ||
                 ?>
                 <ul class="vp-portfolio__item-meta-categories">
                     <?php
+                    // phpcs:ignore
                     $count = $opts['categories_count'];
+
+                    // phpcs:ignore
                     foreach ( $args['categories'] as $category ) {
                         if ( ! $count ) {
                             break;
@@ -92,6 +96,6 @@ $show_meta = $opts['show_title'] && $args['title'] ||
                 <?php
             }
             ?>
-        </figcaption>
+        </div>
     <?php endif; ?>
-</div>
+</figcaption>

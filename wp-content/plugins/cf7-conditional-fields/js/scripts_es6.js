@@ -3,6 +3,7 @@
 var cf7signature_resized = 0; // for compatibility with contact-form-7-signature-addon
 
 var wpcf7cf_timeout;
+var wpcf7cf_change_time_ms = window.wpcf7cf_running_tests ? 0 : 100;
 
 var wpcf7cf_show_animation = { "height": "show", "marginTop": "show", "marginBottom": "show", "paddingTop": "show", "paddingBottom": "show" };
 var wpcf7cf_hide_animation = { "height": "hide", "marginTop": "hide", "marginBottom": "hide", "paddingTop": "hide", "paddingBottom": "hide" };
@@ -75,10 +76,14 @@ var Wpcf7cfForm = function($form) {
     form.displayFields();
 
     // bring form in initial state if the reset event is fired on it.
-    form.$form.on('reset', form, function(e) {
+    form.$form.on('reset.wpcf7cf', form, function(e) {
         var form = e.data;
         setTimeout(function(){
             form.displayFields();
+            form.resetRepeaters();
+            if (form.multistep != null) {
+                form.multistep.moveToStep(1); 
+            }
         },200);
     });
 
@@ -94,17 +99,29 @@ var Wpcf7cfForm = function($form) {
 
     if ($multistep.length) {
         form.multistep = new Wpcf7cfMultistep($multistep, form);
-        // wpcf7cf.updateMultistepState(form.multistep);
+        // window.wpcf7cf.updateMultistepState(form.multistep);
     }
 
     // END PRO ONLY
 
 }
+
+/**
+ * reset initial number of subs for each repeater.
+ * (does not clear values)
+ */
+Wpcf7cfForm.prototype.resetRepeaters = function() {
+    var form = this;
+    form.repeaters.forEach(repeater => {
+        repeater.updateSubs( repeater.params.$repeater.initial_subs );
+    });
+}
+
 Wpcf7cfForm.prototype.displayFields = function() {
 
     var form = this;
 
-    wpcf7cf.get_simplified_dom_model(form.$form);
+    window.wpcf7cf.get_simplified_dom_model(form.$form);
 
     var unit_tag = this.unit_tag;
     var wpcf7cf_conditions = this.conditions;
@@ -131,10 +148,10 @@ Wpcf7cfForm.prototype.displayFields = function() {
 
         var condition = wpcf7cf_conditions[i];
 
-        var show_group = wpcf7cf.should_group_be_shown(condition, form.$form);
+        var show_group = window.wpcf7cf.should_group_be_shown(condition, form.$form);
 
         if (show_group) {
-            jQuery('[data-id='+condition.then_field+']',form.$form).eq(0).removeClass('wpcf7cf-hidden');
+            jQuery('[data-id="'+condition.then_field+'"]',form.$form).eq(0).removeClass('wpcf7cf-hidden');
         }
     }
 
@@ -161,6 +178,17 @@ Wpcf7cfForm.prototype.displayFields = function() {
                     $this.prop('checked', this.defaultChecked);
                 });
 
+                jQuery('option', $group).each(function() {
+                    this.selected = this.defaultSelected;
+                });
+
+                jQuery('select', $group).each(function() {
+                    const $select = jQuery(this);
+                    if ($select.val() === null) {
+                        $select.val(jQuery("option:first",$select).val());
+                    }
+                });
+
                 $inputs.change();
                 //display_fields();
             }
@@ -175,7 +203,34 @@ Wpcf7cfForm.prototype.displayFields = function() {
     });
 
     form.updateHiddenFields();
+    form.updateSummaryFields();
 };
+
+Wpcf7cfForm.prototype.updateSummaryFields = function() {
+    var $summary = jQuery('.wpcf7cf-summary', this.$form);
+
+    if ($summary.length == 0 || !$summary.is(':visible')) return;
+
+    var fd = new FormData();
+
+    var formdata = this.$form.serializeArray();
+    jQuery.each(formdata,function(key, input){
+        fd.append(input.name, input.value);
+    });
+
+    jQuery.ajax({
+        url: wpcf7cf_global_settings.ajaxurl + '?action=wpcf7cf_get_summary',
+        type: 'POST',
+        data: fd,
+        processData: false,
+        contentType: false,
+        dataType: 'json',
+        success: function(json) {
+            $summary.html(json.summaryHtml);
+        }
+    });
+};
+
 Wpcf7cfForm.prototype.updateHiddenFields = function() {
 
     var form = this;
@@ -210,7 +265,7 @@ Wpcf7cfForm.prototype.updateGroups = function() {
     var form = this;
     form.$groups = form.$form.find('[data-class="wpcf7cf_group"]');
 
-    form.conditions = wpcf7cf.get_nested_conditions(form.initial_conditions, form.$form);
+    form.conditions = window.wpcf7cf.get_nested_conditions(form.initial_conditions, form.$form);
 
 };
 Wpcf7cfForm.prototype.updateEventListeners = function() {
@@ -223,7 +278,7 @@ Wpcf7cfForm.prototype.updateEventListeners = function() {
         clearTimeout(wpcf7cf_timeout);
         wpcf7cf_timeout = setTimeout(function() {
             form.displayFields();
-        }, 100);
+        }, wpcf7cf_change_time_ms);
     });
 
     // PRO ONLY
@@ -252,6 +307,7 @@ function Wpcf7cfRepeater($repeater, form) {
 
     $repeater.num_subs = 0;
     $repeater.id = $repeater.data('id');
+    $repeater.orig_id = $repeater.data('orig_data_id');
     $repeater.min = typeof( $repeater.data('min')) !== 'undefined' ? parseInt($repeater.data('min')) : 1;
     $repeater.max = typeof( $repeater.data('max')) !== 'undefined' ? parseInt($repeater.data('max')) : 200;
     $repeater.initial_subs = typeof( $repeater.data('initial')) !== 'undefined' ? parseInt($repeater.data('initial')) : $repeater.min;
@@ -409,7 +465,8 @@ Wpcf7cfRepeater.prototype.addSubs = function(subs_to_add) {
 
     for(var i=1; i<=subs_to_add; i++) {
         var sub_suffix = $repeater.num_subs+i;
-        html_str += params.repeater_sub_html.replace(/\{\{repeater_sub_suffix\}\}/g,sub_suffix);
+        html_str += params.repeater_sub_html.replace(/\{\{repeater_sub_suffix\}\}/g,sub_suffix)
+        .replace(new RegExp('\{\{'+$repeater.orig_id+'_index\}\}','g'),sub_suffix);
     }
 
 
@@ -425,7 +482,7 @@ Wpcf7cfRepeater.prototype.addSubs = function(subs_to_add) {
 
     $repeater.num_subs+= subs_to_add;
 
-    wpcf7cf.updateMultistepState(form.multistep);
+    window.wpcf7cf.updateMultistepState(form.multistep);
     form.updateGroups();
     form.updateEventListeners();
     form.displayFields();
@@ -454,8 +511,8 @@ Wpcf7cfRepeater.prototype.removeSubs = function(num_subs) {
         var $this = jQuery(this);
         //remove the actual fields from the form
         $this.remove();
-        form.$form.trigger('wpcf7cf_repeater_removed');
-        wpcf7cf.updateMultistepState(form.multistep);
+        params.$repeater.trigger('wpcf7cf_repeater_removed');
+        window.wpcf7cf.updateMultistepState(form.multistep);
         form.updateGroups();
         form.updateEventListeners();
         form.displayFields();
@@ -472,7 +529,7 @@ function Wpcf7cfMultistep($multistep, form) {
     multistep.$btn_next = $multistep.find('.wpcf7cf_next');
     multistep.$btn_prev = $multistep.find('.wpcf7cf_prev');
     multistep.$dots = $multistep.find('.wpcf7cf_steps-dots');
-    multistep.current_step = 0;
+    multistep.currentStep = 0;
     multistep.numSteps = multistep.$steps.length;
 
 
@@ -488,35 +545,63 @@ function Wpcf7cfMultistep($multistep, form) {
 
     multistep.$btn_next.on('click.wpcf7cf_step', async function() {
         
-        var result = await multistep.validateStep(multistep.current_step);
-        console.log('got this result: ' + result);
+        var result = await multistep.validateStep(multistep.currentStep);
         if (result === 'success') {
-            multistep.moveToStep(multistep.current_step+1);
+            multistep.moveToStep(multistep.currentStep+1); 
+        }
+
+    });
+
+    // If form is submitted (by pressing retrun for example), and if we are not on the last step,
+    // then trigger click event on the $next button instead.
+    multistep.form.$form.on('submit.wpcf7cf_step', function(e) {
+
+        if (multistep.currentStep !== multistep.numSteps) {
+            multistep.$btn_next.trigger('click.wpcf7cf_step');
+
+            e.stopImmediatePropagation();
+            return false;
         }
     });
 
     multistep.$btn_prev.click(function() {
-        multistep.moveToStep(multistep.current_step-1);
+        multistep.moveToStep(multistep.currentStep-1);
     });
 
     multistep.moveToStep(1);
 }
 
+jQuery(document).ajaxComplete(function(e, xhr, settings){
+    if (
+        xhr.hasOwnProperty('responseJSON')          &&
+        xhr.responseJSON != null                    &&
+        xhr.responseJSON.hasOwnProperty('status')   &&
+        xhr.responseJSON.hasOwnProperty('into')     &&
+        xhr.responseJSON.status === "mail_success"
+    ) {
+        jQuery( xhr.responseJSON.into ).trigger('reset.wpcf7cf');
+    }
+});
+
 Wpcf7cfMultistep.prototype.validateStep = function(step_index) {
 
-    return new Promise(resolve => {
-        var multistep = this;
-        var $multistep = multistep.$multistep;
+    var multistep = this;
+    var $multistep = multistep.$multistep;
+    var $form = multistep.form.$form;
 
-        //validation
-        var $form = multistep.form.$form;
+    $form.find('.wpcf7-response-output').addClass('wpcf7-display-none');
+
+    return new Promise(resolve => {
 
         var fd = new FormData();
 
-        // TEST IF FILES UPLOADS WORK? THEN REMOVE THIS
-        // jQuery.each($form.find('[data-id="step'+step_index+'"] input[type="file"]'), function(index, el) {
-        //     fd.append(jQuery(el).attr('name'), jQuery(el)[0].files[0]);
-        // });
+        // Make sure to add file fields to FormData
+        jQuery.each($form.find('[data-id="step-'+step_index+'"] input[type="file"]'), function(index, el) {
+            if (! el.files.length) return false;
+            const file = el.files[0];
+            const fieldName = el.name;
+            fd.append(fieldName, file);
+        });
 
         var formdata = $form.serializeArray();
         jQuery.each(formdata,function(key, input){
@@ -535,15 +620,16 @@ Wpcf7cfMultistep.prototype.validateStep = function(step_index) {
             /*
             * Insert _form_data_id if 'json variable' has
             */
-            if (typeof json._cf7mls_db_form_data_id != 'undefined') {
-                if (!form.find('input[name="_cf7mls_db_form_data_id"]').length) {
-                    form.append('<input type="hidden" name="_cf7mls_db_form_data_id" value="'+json._cf7mls_db_form_data_id+'" />');
-                }
-            }
+            // if (typeof json._cf7mls_db_form_data_id != 'undefined') {
+            //     if (!form.find('input[name="_cf7mls_db_form_data_id"]').length) {
+            //         form.append('<input type="hidden" name="_cf7mls_db_form_data_id" value="'+json._cf7mls_db_form_data_id+'" />');
+            //     }
+            // }
 
             //reset error messages
-            $multistep.find('.wpcf7-form-control-wrap').removeClass('cf7mls-invalid');
+            //$multistep.find('.wpcf7-form-control-wrap').removeClass('cf7mls-invalid');
             $multistep.find('.wpcf7-form-control-wrap .wpcf7-not-valid-tip').remove();
+            $multistep.find('.wpcf7-not-valid').removeClass('wpcf7-not-valid');
             $multistep.find('.wpcf7-response-output').remove();
             $multistep.find('.wpcf7-response-output.wpcf7-validation-errors').removeClass('wpcf7-validation-errors');
 
@@ -561,7 +647,8 @@ Wpcf7cfMultistep.prototype.validateStep = function(step_index) {
                         checkError = checkError + 1;
 
                         var controlWrap = jQuery('.wpcf7-form-control-wrap.' + index, $form);
-                        controlWrap.addClass('cf7mls-invalid');
+                        //controlWrap.addClass('cf7mls-invalid');
+                        controlWrap.find('input').addClass('wpcf7-not-valid');
                         controlWrap.find('span.wpcf7-not-valid-tip').remove();
                         controlWrap.append('<span role="alert" class="wpcf7-not-valid-tip">' + el.reason + '</span>');
 
@@ -570,7 +657,9 @@ Wpcf7cfMultistep.prototype.validateStep = function(step_index) {
                 });
 
                 resolve('failed');
-                $multistep.append('<div class="wpcf7-response-output wpcf7-display-none wpcf7-validation-errors" style="display: block;" role="alert">' + json.message + '</div>');
+                //$multistep.append('<div class="wpcf7-response-output wpcf7-display-none wpcf7-validation-errors" style="display: block;" role="alert">' + json.message + '</div>');
+
+                $multistep.parent().find('.wpcf7-response-output').removeClass('wpcf7-display-none').html(json.message);
 
             } else if (json.success) {
                 resolve('success');
@@ -587,22 +676,36 @@ Wpcf7cfMultistep.prototype.validateStep = function(step_index) {
 };
 Wpcf7cfMultistep.prototype.moveToStep = function(step_index) {
     var multistep = this;
-    multistep.current_step = step_index > multistep.numSteps ? multistep.numSteps
+    var previousStep = multistep.currentStep;
+
+    multistep.currentStep = step_index > multistep.numSteps ? multistep.numSteps
                                 : step_index < 1 ? 1
                                     : step_index;
 
     // ANIMATION DISABLED FOR NOW cause it's ugly
     // multistep.$steps.animate(wpcf7cf_hide_step_animation, multistep.form.settings.animation_outtime);
-    // multistep.$steps.eq(multistep.current_step-1).animate(wpcf7cf_show_step_animation, multistep.form.settings.animation_intime);
+    // multistep.$steps.eq(multistep.currentStep-1).animate(wpcf7cf_show_step_animation, multistep.form.settings.animation_intime);
 
+    multistep.$multistep.attr('data-current_step', multistep.currentStep);
     multistep.$steps.hide();
-    multistep.$steps.eq(multistep.current_step-1).show(); 
+    multistep.$steps
+        .eq(multistep.currentStep-1)
+        .show()
+        .trigger('wpcf7cf_change_step', [previousStep, multistep.currentStep]);
 
-    wpcf7cf.updateMultistepState(multistep);
+    const formEl = multistep.form.$form[0];
+    const topOffset = formEl.getBoundingClientRect().top;
+    if (topOffset < 0 && previousStep > 0) {
+        formEl.scrollIntoView({behavior: "smooth"});
+    }
+
+    multistep.form.updateSummaryFields();
+
+    window.wpcf7cf.updateMultistepState(multistep);
 };
 
 Wpcf7cfMultistep.prototype.getFieldsInStep = function(step_index) {
-    var simpleDom = wpcf7cf.get_simplified_dom_model(this.form.$form);
+    var simpleDom = window.wpcf7cf.get_simplified_dom_model(this.form.$form);
     var inStep = false;
     return simpleDom.filter(function(item, i) {
         if(item.type == 'step') {
@@ -616,7 +719,7 @@ Wpcf7cfMultistep.prototype.getFieldsInStep = function(step_index) {
 
 // END PRO ONLY
 
-var wpcf7cf = {
+window.wpcf7cf = {
 
     // keep this for backwards compatibility
     initForm : function($form) {
@@ -625,7 +728,7 @@ var wpcf7cf = {
 
     get_nested_conditions : function(conditions, $current_form) {
         //loop trough conditions. Then loop trough the dom, and each repeater we pass we should update all sub_values we encounter with __index
-        var simplified_dom = wpcf7cf.get_simplified_dom_model($current_form);
+        var simplified_dom = window.wpcf7cf.get_simplified_dom_model($current_form);
         var groups = simplified_dom.filter(function(item, i) {
             return item.type==='group';
         });
@@ -717,33 +820,33 @@ var wpcf7cf = {
         // update hidden input field
 
         var stepsData = {
-            currentStep : multistep.current_step,
+            currentStep : multistep.currentStep,
             numSteps : multistep.numSteps,
-            fieldsInCurrentStep : multistep.getFieldsInStep(multistep.current_step)
+            fieldsInCurrentStep : multistep.getFieldsInStep(multistep.currentStep)
         };
         multistep.form.$input_steps.val(JSON.stringify(stepsData));
 
         // update Buttons
         multistep.$btn_prev.removeClass('disabled');
         multistep.$btn_next.removeClass('disabled');
-        if (multistep.current_step == multistep.numSteps) {
+        if (multistep.currentStep == multistep.numSteps) {
             multistep.$btn_next.addClass('disabled');
         }
-        if (multistep.current_step == 1) {
+        if (multistep.currentStep == 1) {
             multistep.$btn_prev.addClass('disabled');
         }
 
         // replace next button with submit button on last step.
         // TODO: make this depend on a setting
         var $submit_button = multistep.form.$form.find('input[type="submit"]').eq(0);
-        if (multistep.current_step == multistep.numSteps) {
-            var $submit_clone = $submit_button.clone();
-            $submit_button.hide();
+        var $ajax_loader = multistep.form.$form.find('.ajax-loader').eq(0);
+        if (multistep.currentStep == multistep.numSteps) {
             multistep.$btn_next.hide();
-            multistep.$btn_next.parent().append($submit_clone);
-        } else {
-            multistep.$btn_next.parent().find('input[type=submit]').remove();
+            $ajax_loader.detach().appendTo(multistep.$btn_next.parent());
+            $submit_button.detach().appendTo(multistep.$btn_next.parent());
             $submit_button.show();
+        } else {
+            $submit_button.hide();
             multistep.$btn_next.show();
         }
 
@@ -751,9 +854,9 @@ var wpcf7cf = {
         var $dots = multistep.$dots.find('.dot');
         $dots.removeClass('active').removeClass('completed');
         for(var step = 1; step <= multistep.numSteps; step++) {
-            if (step < multistep.current_step) {
+            if (step < multistep.currentStep) {
                 $dots.eq(step-1).addClass('completed');
-            } else if (step == multistep.current_step) {
+            } else if (step == multistep.currentStep) {
                 $dots.eq(step-1).addClass('active');
             }
         }
@@ -777,7 +880,15 @@ var wpcf7cf = {
             var if_val = condition_and_rule.if_value;
             var if_val_as_number = isFinite(parseFloat(if_val)) ? parseFloat(if_val):0;
             var operator = condition_and_rule.operator;
-            var regex_patt = new RegExp(if_val, 'i');
+            
+            var regex_patt = /.*/i; // fallback regex pattern
+            var isValidRegex = true;
+            try {
+                regex_patt = new RegExp(if_val, 'i');
+            } catch(e) {
+                isValidRegex = false;
+            }
+
 
             //backwards compat
             operator = operator === '≤' ? 'less than or equals' : operator;
@@ -786,80 +897,7 @@ var wpcf7cf = {
             operator = operator === '<' ? 'less than' : operator;
 
 
-            if ($field.length === 1) {
-
-                // single field (tested with text field, single checkbox, select with single value (dropdown), select with multiple values)
-
-                if ($field.is('select')) {
-
-                    if (operator === 'not equals') {
-                        condition_ok = true;
-                    }
-
-                    $field.find('option:selected').each(function () {
-                        var $option = jQuery(this);
-                        var option_val = $option.val()
-                        if (
-                            operator === 'equals' && option_val === if_val ||
-                            operator === 'equals (regex)' && regex_patt.test($option.val())
-                        ) {
-                            condition_ok = true;
-                        } else if (
-                            operator === 'not equals' && option_val === if_val ||
-                            operator === 'not equals (regex)' && !regex_patt.test($option.val())
-                        ) {
-                            condition_ok = false;
-                            return false; // break out of the loop
-                        }
-                    });
-
-                    show_group = show_group && condition_ok;
-                }
-
-                var field_val = $field.val();
-                var field_val_as_number = isFinite(parseFloat(field_val)) ? parseFloat(field_val):0;
-
-                if ($field.attr('type') === 'checkbox') {
-                    var field_is_checked = $field.is(':checked');
-                    if (
-                        operator === 'equals'             && field_is_checked && field_val === if_val ||
-                        operator === 'not equals'         && !field_is_checked ||
-                        operator === 'is empty'           && !field_is_checked ||
-                        operator === 'not empty'          && field_is_checked ||
-                        operator === 'greater than'                  && field_is_checked && field_val_as_number > if_val_as_number ||
-                        operator === 'less than'                  && field_is_checked && field_val_as_number < if_val_as_number ||
-                        operator === 'greater than or equals'                 && field_is_checked && field_val_as_number >= if_val_as_number ||
-                        operator === 'less than or equals'                 && field_is_checked && field_val_as_number <= if_val_as_number ||
-                        operator === 'equals (regex)'     && field_is_checked && regex_patt.test(field_val) ||
-                        operator === 'not equals (regex)' && !field_is_checked
-
-                    ) {
-                        condition_ok = true;
-                    }
-                } else if (
-                    operator === 'equals'             && field_val === if_val ||
-                    operator === 'not equals'         && field_val !== if_val ||
-                    operator === 'equals (regex)'     && regex_patt.test(field_val) ||
-                    operator === 'not equals (regex)' && !regex_patt.test(field_val) ||
-                    operator === 'greater than'                  && field_val_as_number > if_val_as_number ||
-                    operator === 'less than'                  && field_val_as_number < if_val_as_number ||
-                    operator === 'greater than or equals'                 && field_val_as_number >= if_val_as_number ||
-                    operator === 'less than or equals'                 && field_val_as_number <= if_val_as_number ||
-                    operator === 'is empty'           && field_val === '' ||
-                    operator === 'not empty'          && field_val !== '' ||
-                    (
-                        operator === 'function'
-                        && typeof window[if_val] == 'function'
-                        && window[if_val]($field)
-                    )
-                ) {
-                    condition_ok = true;
-                }
-
-
-            } else if ($field.length > 1) {
-
-                // multiple fields (tested with checkboxes, exclusive checkboxes, dropdown with multiple values)
+            if ( $field.is(':checkbox') || $field.is(':radio') ) {
 
                 var all_values = [];
                 var checked_values = [];
@@ -870,33 +908,11 @@ var wpcf7cf = {
                     }
                 });
 
-                var checked_value_index = jQuery.inArray(if_val, checked_values);
-                var value_index = jQuery.inArray(if_val, all_values);
-
-                if (
-                    ( operator === 'is empty' && checked_values.length === 0 ) ||
-                    ( operator === 'not empty' && checked_values.length > 0  )
-                ) {
-                    condition_ok = true;
-                }
-
-
-                for (var ind = 0; ind < checked_values.length; ind++) {
-                    var checked_val = checked_values[ind];
-                    var checked_val_as_number = isFinite(parseFloat(checked_val)) ? parseFloat(checked_val):0;
-                    if (
-                        ( operator === 'equals'             && checked_val === if_val ) ||
-                        ( operator === 'not equals'         && checked_val !== if_val ) ||
-                        ( operator === 'equals (regex)'     && regex_patt.test(checked_val) ) ||
-                        ( operator === 'not equals (regex)' && !regex_patt.test(checked_val) ) ||
-                        ( operator === 'greater than'                  && checked_val_as_number > if_val_as_number ) ||
-                        ( operator === 'less than'                  && checked_val_as_number < if_val_as_number ) ||
-                        ( operator === 'greater than or equals'                 && checked_val_as_number >= if_val_as_number ) ||
-                        ( operator === 'less than or equals'                 && checked_val_as_number <= if_val_as_number )
-                    ) {
-                        condition_ok = true;
-                    }
-                }
+                condition_ok = this.isConditionTrue(checked_values,operator,if_val,$field);
+                
+            } else {
+                
+                condition_ok = this.isConditionTrue($field.val(),operator,if_val,$field);
             }
 
             show_group = show_group && condition_ok;
@@ -904,9 +920,99 @@ var wpcf7cf = {
 
         return show_group;
 
+    },
+    isConditionTrue(values, operator, testValue='', $field=jQuery()) {
+
+        if (!Array.isArray(values)) {
+            values = [values];
+        }
+
+        let condition_ok = false; // start by assuming that the condition is not met
+
+        if (!values || values.length == 0 || values.every((v) => !v||0)) { // no values or only empty values passed (0 is not considered empty)
+            if (operator === 'is empty') {
+                condition_ok = true;
+            }
+            if (operator === 'not empty') {
+                condition_ok = false;
+            }
+        } else {
+            if (operator === 'is empty') {
+                condition_ok = false;
+            }
+            if (operator === 'not empty') {
+                condition_ok = true;
+            }
+        }
+
+        const testValueNumber = isFinite(parseFloat(testValue)) ? parseFloat(testValue) : NaN;
+
+
+        if (operator === 'not equals' || operator === 'not equals (regex)') {
+            // start by assuming that the condition is met
+            condition_ok = true;
+        }
+
+        if (
+            operator === 'function'
+            && typeof window[testValue] == 'function'
+            && window[testValue]($field) // here we call the actual user defined function
+        ) {
+            condition_ok = true;
+        }
+
+        let regex_patt = /.*/i; // fallback regex pattern
+        let isValidRegex = true;
+        if (operator === 'equals (regex)' || operator === 'not equals (regex)') {
+            try {
+                regex_patt = new RegExp(testValue, 'i');
+            } catch(e) {
+                isValidRegex = false;
+            }
+        }
+
+
+        for(let i = 0; i < values.length; i++) {
+
+            const value = values[i];
+
+            const valueNumber = isFinite(parseFloat(value)) ? parseFloat(value) : NaN;
+            const valsAreNumbers = !isNaN(valueNumber) && !isNaN(testValueNumber);
+
+            if (
+
+                operator === 'equals' && value === testValue ||
+                operator === 'equals (regex)' && regex_patt.test(value) ||
+                operator === 'greater than' && valsAreNumbers && valueNumber > testValueNumber ||
+                operator === 'less than' && valsAreNumbers && valueNumber < testValueNumber ||
+                operator === 'greater than or equals' && valsAreNumbers && valueNumber >= testValueNumber ||
+                operator === 'less than or equals' && valsAreNumbers && valueNumber <= testValueNumber
+                
+            ) {
+
+                condition_ok = true;
+                break;
+
+            } else if (
+
+                operator === 'not equals' && value === testValue ||
+                operator === 'not equals (regex)' && regex_patt.test(value)
+
+            ) {
+
+                condition_ok = false;
+                break;
+
+            }
+        }
+
+        return condition_ok;
+
     }
 
 };
+
+
 
 
 jQuery('.wpcf7-form').each(function(){

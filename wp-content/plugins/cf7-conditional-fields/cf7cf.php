@@ -343,7 +343,9 @@ class CF7CF {
      * @return void
      */
     public static function getConditions($form_id) {
-        return get_post_meta($form_id,'wpcf7cf_options',true); // the meta key 'wpcf7cf_options' is a bit misleading at this point, because it only holds the form's conditions, no other options/settings
+        // make sure conditions are an array.
+        $options = get_post_meta($form_id,'wpcf7cf_options',true);
+        return is_array($options) ? $options : array(); // the meta key 'wpcf7cf_options' is a bit misleading at this point, because it only holds the form's conditions, no other options/settings
     }
 
     

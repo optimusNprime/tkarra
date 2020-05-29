@@ -27,42 +27,42 @@ class Visual_Portfolio_Controls {
      */
     private static $default_args = array(
         // category for registered fields.
-        'category' => '',
+        'category'       => '',
 
-        'type' => 'text',
-        'label' => false,
-        'description' => false,
-        'name' => '',
-        'value' => '',
+        'type'           => 'text',
+        'label'          => false,
+        'description'    => false,
+        'name'           => '',
+        'value'          => '',
         'value_callback' => '',
-        'placeholder' => '',
-        'readonly' => false,
+        'placeholder'    => '',
+        'readonly'       => false,
 
         // control-specific args.
         // select.
-        'options' => array(),
-        'searchable' => false,
-        'multiple' => false,
-        'tags' => false,
-        'post_type' => '',
+        'options'        => array(),
+        'searchable'     => false,
+        'multiple'       => false,
+        'tags'           => false,
+        'post_type'      => '',
         // range.
-        'min' => '',
-        'max' => '',
-        'step' => '1',
+        'min'            => '',
+        'max'            => '',
+        'step'           => '1',
         // textarea.
-        'cols' => '',
-        'rows' => '',
+        'cols'           => '',
+        'rows'           => '',
         // color.
-        'alpha' => false,
+        'alpha'          => false,
         // align.
-        'extended' => false,
+        'extended'       => false,
 
         // hint.
-        'hint'  => false,
-        'hint_place' => 'top',
+        'hint'           => false,
+        'hint_place'     => 'top',
 
         // condition.
-        'condition' => array(
+        'condition'      => array(
             /**
              * Array of arrays with data:
              *  'control' - control name.
@@ -72,7 +72,7 @@ class Visual_Portfolio_Controls {
         ),
 
         // style.
-        'style' => array(
+        'style'          => array(
             /**
              * Array of arrays with data:
              *  'element' - CSS selector string (.vp-portfolio__item, .vp-portfolio__item-overlay, etc).
@@ -81,8 +81,8 @@ class Visual_Portfolio_Controls {
              */
         ),
 
-        'class' => '',
-        'wrapper_class' => '',
+        'class'          => '',
+        'wrapper_class'  => '',
     );
 
     /**
@@ -134,8 +134,8 @@ class Visual_Portfolio_Controls {
 
         ?>
             <div class="<?php echo esc_attr( $class ); ?>"
-                 data-hint="<?php echo esc_attr( $args['hint'] ? : 'false' ); ?>"
-                 data-hint-place="<?php echo esc_attr( $args['hint_place'] ? : 'top' ); ?>"
+                data-hint="<?php echo esc_attr( $args['hint'] ? $args['hint'] : 'false' ); ?>"
+                data-hint-place="<?php echo esc_attr( $args['hint_place'] ? $args['hint_place'] : 'top' ); ?>"
                     <?php
                     if ( ! $args['wrapper_class'] ) {
                         self::print_condition( $args );
@@ -217,7 +217,7 @@ class Visual_Portfolio_Controls {
 
         // registered data.
         $registered_array = self::get_registered_array();
-        $registered_data = isset( $registered_array[ $name ] ) ? $registered_array[ $name ] : false;
+        $registered_data  = isset( $registered_array[ $name ] ) ? $registered_array[ $name ] : false;
 
         // find default.
         $default = null;
@@ -257,9 +257,9 @@ class Visual_Portfolio_Controls {
         if ( $args['condition'] && ! empty( $args['condition'] ) ) {
             foreach ( $args['condition'] as $cond ) {
                 if ( ! empty( $cond ) && isset( $cond['control'] ) ) {
-                    $control = $cond['control'];
+                    $control  = $cond['control'];
                     $operator = isset( $cond['operator'] ) ? $cond['operator'] : '==';
-                    $value = isset( $cond['value'] ) ? $cond['value'] : 'true';
+                    $value    = isset( $cond['value'] ) ? $cond['value'] : 'true';
 
                     if ( ! empty( $condition_attr ) ) {
                         $condition_attr .= ' && ';
@@ -304,7 +304,7 @@ class Visual_Portfolio_Controls {
             <?php
             foreach ( $args['style'] as $style ) {
                 if ( $style['element'] && $style['property'] ) {
-                ?>
+                    ?>
                     <input type="hidden"
                         name="<?php echo esc_attr( $args['name'] ); ?>__style[]"
                         data-style-from="[name='<?php echo esc_attr( $args['name'] ); ?>']"
@@ -313,7 +313,7 @@ class Visual_Portfolio_Controls {
                         data-style-mask="<?php echo esc_attr( isset( $style['mask'] ) ? $style['mask'] : '$' ); ?>"
                         value=""
                     >
-                <?php
+                    <?php
                 }
             }
             ?>
@@ -452,7 +452,7 @@ class Visual_Portfolio_Controls {
                 $selected = false;
 
                 if ( $args['multiple'] ) {
-                    if ( $args['value'] && is_array( $args['value'] ) && in_array( $check_val, $args['value'] ) ) {
+                    if ( $args['value'] && is_array( $args['value'] ) && in_array( $check_val, $args['value'], true ) ) {
                         $selected = true;
                     }
                 } else {
@@ -579,82 +579,103 @@ class Visual_Portfolio_Controls {
      * @param array $args - control args.
      */
     public static function print_control_gallery( $args = array() ) {
-        $images = (array) $args['value'];
+        $images          = (array) $args['value'];
         $additional_data = array(
-            'title' => array(
-                'type'  => 'text',
-                'label' => esc_html__( 'Title', 'visual-portfolio' ),
-                'name'  => $args['name'] . '_additional_title',
-            ),
-            'description' => array(
-                'type'  => 'textarea',
-                'label' => esc_html__( 'Description', 'visual-portfolio' ),
-                'name'  => $args['name'] . '_additional_description',
-            ),
-            'categories' => array(
-                'type'  => 'select2',
-                'label' => esc_html__( 'Categories', 'visual-portfolio' ),
-                'name'  => $args['name'] . '_additional_categories',
-                'multiple' => true,
-                'tags' => true,
-            ),
-            'format' => array(
-                'type'  => 'select2',
-                'label' => esc_html__( 'Format', 'visual-portfolio' ),
-                'name'  => $args['name'] . '_additional_format',
-                'default' => 'standard',
-                'options' => array(
-                    'standard' => esc_html__( 'Standard', 'visual-portfolio' ),
-                    'video' => esc_html__( 'Video', 'visual-portfolio' ),
-                ),
-            ),
-            'video_url' => array(
-                'type'  => 'text',
-                'label' => esc_html__( 'Video URL', 'visual-portfolio' ),
-                'placeholder'  => esc_html__( 'https://...', 'visual-portfolio' ),
-                'name'  => $args['name'] . '_additional_video_url',
+            'title'       => array(
+                'type'      => 'text',
+                'label'     => esc_html__( 'Title', 'visual-portfolio' ),
+                'name'      => $args['name'] . '_additional_title',
                 'condition' => array(
                     array(
-                        'control' => $args['name'] . '_additional_format',
-                        'value' => 'video',
+                        'control'  => 'vp_images_titles_source',
+                        'operator' => '===',
+                        'value'    => 'custom',
                     ),
                 ),
             ),
-            'url' => array(
-                'type'  => 'text',
-                'label' => esc_html__( 'URL', 'visual-portfolio' ),
+            'description' => array(
+                'type'      => 'textarea',
+                'label'     => esc_html__( 'Description', 'visual-portfolio' ),
+                'name'      => $args['name'] . '_additional_description',
+                'condition' => array(
+                    array(
+                        'control'  => 'vp_images_descriptions_source',
+                        'operator' => '===',
+                        'value'    => 'custom',
+                    ),
+                ),
+            ),
+            'categories'  => array(
+                'type'     => 'select2',
+                'label'    => esc_html__( 'Categories', 'visual-portfolio' ),
+                'name'     => $args['name'] . '_additional_categories',
+                'multiple' => true,
+                'tags'     => true,
+            ),
+            'format'      => array(
+                'type'    => 'select2',
+                'label'   => esc_html__( 'Format', 'visual-portfolio' ),
+                'name'    => $args['name'] . '_additional_format',
+                'default' => 'standard',
+                'options' => array(
+                    'standard' => esc_html__( 'Standard', 'visual-portfolio' ),
+                    'video'    => esc_html__( 'Video', 'visual-portfolio' ),
+                ),
+            ),
+            'video_url'   => array(
+                'type'        => 'text',
+                'label'       => esc_html__( 'Video URL', 'visual-portfolio' ),
+                'placeholder' => esc_html__( 'https://...', 'visual-portfolio' ),
+                'name'        => $args['name'] . '_additional_video_url',
+                'condition'   => array(
+                    array(
+                        'control' => $args['name'] . '_additional_format',
+                        'value'   => 'video',
+                    ),
+                ),
+            ),
+            'url'         => array(
+                'type'        => 'text',
+                'label'       => esc_html__( 'URL', 'visual-portfolio' ),
                 'description' => esc_html__( 'By default used full image url, you can use custom one', 'visual-portfolio' ),
-                'placeholder'  => esc_html__( 'https://...', 'visual-portfolio' ),
-                'name'  => $args['name'] . '_additional_url',
+                'placeholder' => esc_html__( 'https://...', 'visual-portfolio' ),
+                'name'        => $args['name'] . '_additional_url',
             ),
         );
+
+        $additional_data = Visual_Portfolio_Extend::image_controls( $additional_data, $args['name'] );
 
         ?>
         <textarea name="<?php echo esc_attr( $args['name'] ); ?>" style="display: none;"><?php echo esc_textarea( json_encode( $images, defined( 'JSON_UNESCAPED_UNICODE' ) ? JSON_UNESCAPED_UNICODE : 256 ) ); ?></textarea>
 
         <div class="vp-control-gallery-additional-data">
-            <div class="vp-control-gallery-additional-data-preview">
-                <div class="vp-control-gallery-additional-data-preview-image">
-                    <img src="" alt="">
-                </div>
-                <div class="vp-control-gallery-additional-data-preview-data">
-                    <strong class="vp-control-gallery-additional-data-preview-name"></strong>
-                    <div class="vp-control-gallery-additional-data-preview-size"></div>
-                    <div class="vp-control-gallery-additional-data-preview-edit">
-                        <a href="#" target="_blank"><?php echo esc_html__( 'Edit', 'visual-portfolio' ); ?></a>
+            <div>
+                <div class="vp-control-gallery-additional-data-preview">
+                    <div class="vp-control-gallery-additional-data-preview-image">
+                        <img src="" alt="">
+                    </div>
+                    <div class="vp-control-gallery-additional-data-preview-data">
+                        <strong class="vp-control-gallery-additional-data-preview-name"></strong>
+                        <div class="vp-control-gallery-additional-data-preview-size"></div>
+                        <div class="vp-control-gallery-additional-data-preview-edit">
+                            <a href="#" target="_blank"><?php echo esc_html__( 'Edit', 'visual-portfolio' ); ?></a>
+                        </div>
                     </div>
                 </div>
+                <?php
+                foreach ( $additional_data as $name => $data_item ) {
+                    self::get(
+                        array_merge(
+                            $data_item,
+                            array(
+                                'value' => '',
+                                'class' => 'vp-no-reload',
+                            )
+                        )
+                    );
+                }
+                ?>
             </div>
-            <?php
-            foreach ( $additional_data as $name => $data_item ) {
-                self::get(
-                    array_merge( $data_item, array(
-                        'value'  => '',
-                        'class' => 'vp-no-reload',
-                    ) )
-                );
-            }
-            ?>
         </div>
         <div class="vp-control-gallery-items">
             <?php
@@ -663,23 +684,26 @@ class Visual_Portfolio_Controls {
                     continue;
                 }
 
-                $img = wp_get_attachment_image( $data['id'], 'thumbnail' );
+                $img      = wp_get_attachment_image( $data['id'], 'thumbnail' );
                 $img_data = wp_prepare_attachment_for_js( $data['id'] );
 
                 ?>
                 <div class="vp-control-gallery-items-img" data-image-id="<?php echo esc_attr( $data['id'] ); ?>">
                     <?php
-                    echo wp_kses( $img, array(
-                        'img' => array(
-                            'src'     => array(),
-                            'srcset'  => array(),
-                            'sizes'   => array(),
-                            'alt'     => array(),
-                            'class'   => array(),
-                            'width'   => array(),
-                            'height'  => array(),
-                        ),
-                    ) );
+                    echo wp_kses(
+                        $img,
+                        array(
+                            'img' => array(
+                                'src'    => array(),
+                                'srcset' => array(),
+                                'sizes'  => array(),
+                                'alt'    => array(),
+                                'class'  => array(),
+                                'width'  => array(),
+                                'height' => array(),
+                            ),
+                        )
+                    );
 
                     // image meta data.
                     echo '<div style="display: none;" data-meta="width">' . esc_html( $img_data['width'] ) . '</div>';

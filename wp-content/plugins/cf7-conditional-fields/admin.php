@@ -70,7 +70,17 @@ if (!function_exists('all_operator_options')) {
 
 function wpcf7cf_editor_panel_conditional($form) {
 
-	$form_id = $_GET['post'];
+	$form_id = isset($_GET['post']) ? $_GET['post'] : false;
+
+	if ($form_id === false) {
+		?>
+		    <div class="wpcf7cf-inner-container">
+				<h2><?php echo esc_html( __( 'Conditional fields', 'wpcf7cf' ) ); ?></h2>
+				<p>You need to save your form, before you can start adding conditions.</p>
+			</div>
+		<?php
+		return;
+	}
 
 	$wpcf7cf_entries = CF7CF::getConditions($form_id);
 
@@ -80,7 +90,7 @@ function wpcf7cf_editor_panel_conditional($form) {
 
 	?>
     <div class="wpcf7cf-inner-container">
-        <h3><?php echo esc_html( __( 'Conditional fields', 'wpcf7cf' ) ); ?></h3>
+        <h2><?php echo esc_html( __( 'Conditional fields', 'wpcf7cf' ) ); ?></h2>
 
         <?php
         print_entries_html($form);
@@ -153,6 +163,10 @@ function wpcf7cf_save_contact_form( $contact_form )
 	$conditions = CF7CF::parse_conditions($conditions_string);
 
 	CF7CF::setConditions($post_id, $conditions);
+
+	if (isset($_POST['wpcf7cf-summary-template'])) {
+		WPCF7CF_Summary::saveSummaryTemplate($_POST['wpcf7cf-summary-template'],$post_id);
+	}
 
     return;
 

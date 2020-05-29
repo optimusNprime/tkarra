@@ -44,6 +44,44 @@ class Visual_Portfolio_Preview {
         add_filter( 'vpf_get_layout_option', array( $this, 'filter_preview_option' ), 10, 2 );
         add_action( 'init', array( $this, 'flush_rules_preview_frame' ) );
         add_action( 'template_redirect', array( $this, 'template_redirect' ) );
+
+        add_action( 'wp_print_scripts', array( $this, 'localize_scripts' ), 9 );
+    }
+
+    /**
+     * Localize scripts with preview URL.
+     */
+    public function localize_scripts() {
+        // prepare preview URL.
+        global $wp_rewrite;
+
+        $url = get_site_url();
+
+        if ( ! $wp_rewrite->using_permalinks() ) {
+            $url = add_query_arg(
+                array(
+                    'vp_preview' => 'vp_preview',
+                ),
+                $url
+            );
+        } else {
+            $url .= '/vp_preview';
+        }
+
+        wp_localize_script(
+            'visual-portfolio-gutenberg',
+            'VPAdminGutenbergVariables',
+            array(
+                'preview_url' => $url,
+            )
+        );
+        wp_localize_script(
+            'visual-portfolio-elementor',
+            'VPAdminElementorVariables',
+            array(
+                'preview_url' => $url,
+            )
+        );
     }
 
     /**
@@ -52,13 +90,13 @@ class Visual_Portfolio_Preview {
     public function is_preview_check() {
         // phpcs:disable
         $frame = isset( $_GET['vp_preview_frame'] ) ? esc_attr( wp_unslash( $_GET['vp_preview_frame'] ) ) : false;
-        $id = isset( $_GET['vp_preview_frame_id'] ) ? esc_attr( wp_unslash( $_GET['vp_preview_frame_id'] ) ) : false;
+        $id    = isset( $_GET['vp_preview_frame_id'] ) ? esc_attr( wp_unslash( $_GET['vp_preview_frame_id'] ) ) : false;
         // phpcs:enable
 
         $this->preview_enabled = 'true' === $frame && $id;
         if ( $this->preview_enabled ) {
             // check if the user can view vp_lists page.
-            if ( ! current_user_can( 'read_portfolio', $id ) ) {
+            if ( ! current_user_can( 'read_vp_list', $id ) ) {
                 $this->preview_enabled = false;
                 return;
             }
@@ -67,6 +105,7 @@ class Visual_Portfolio_Preview {
 
             // Tell WP Super Cache & W3 Total Cache to not cache WPReadable requests.
             if ( ! defined( 'DONOTCACHEPAGE' ) ) {
+                // phpcs:ignore
                 define( 'DONOTCACHEPAGE', true );
             }
         }
@@ -99,7 +138,7 @@ class Visual_Portfolio_Preview {
             if ( isset( $_POST[ $name ] ) ) {
                 if ( is_array( $_POST[ $name ] ) ) {
                     $val = array_map( 'sanitize_text_field', wp_unslash( $_POST[ $name ] ) );
-                } else if ( 'vp_custom_css' === $name ) {
+                } elseif ( 'vp_custom_css' === $name ) {
                     $val = wp_kses( wp_unslash( $_POST[ $name ] ), array( '\'', '\"' ) );
                 } else {
                     $val = sanitize_text_field( wp_unslash( $_POST[ $name ] ) );
@@ -153,53 +192,32 @@ class Visual_Portfolio_Preview {
      * @param int $id - visual portfolio shortcode id.
      */
     public function print_template( $id ) {
-        wp_enqueue_script( 'iframe-resizer-content', visual_portfolio()->plugin_url . 'assets/vendor/iframe-resizer/iframeResizer.contentWindow.min.js', '', '3.6.3', true );
-        wp_enqueue_script( 'visual-portfolio-preview', visual_portfolio()->plugin_url . 'assets/js/script-preview.min.js', array( 'jquery' ), '', true );
-        ?>
-        <!DOCTYPE html>
-        <html <?php language_attributes(); ?> style="margin-top: 0 !important;">
-            <head>
-                <meta name="viewport" content="width=device-width">
+        do_action( 'vpf_preview_template' );
 
-                <?php wp_head(); ?>
+        // Hide admin bar.
+        add_filter( 'show_admin_bar', '__return_false' );
 
-                <style type="text/css">
-                    html,
-                    body {
-                        margin: 0 !important;
-                        padding: 0 !important;
-                    }
-                    body {
-                        background-color: #fff;
-                    }
-                    body:before {
-                        content: none !important;
-                    }
-                    #wpadminbar {
-                        display: none; <?php // phpcs:ignore ?>
-                    }
-                    #vp_preview {
-                        position: relative;
-                        z-index: 99999;
-                    }
-                    .vp-portfolio {
-                        margin-top: 0;
-                        margin-bottom: 0;
-                    }
-                </style>
-            </head>
+        // Enqueue assets.
+        wp_enqueue_script( 'iframe-resizer-content', visual_portfolio()->plugin_url . 'assets/vendor/iframe-resizer/iframeResizer.contentWindow.min.js', array(), '4.2.1', true );
+        wp_enqueue_script( 'visual-portfolio-preview', visual_portfolio()->plugin_url . 'assets/js/preview.min.js', array( 'jquery' ), '1.16.2', true );
 
-            <body>
-                <div id="vp_preview">
-                    <?php
-                        // phpcs:ignore
-                        echo Visual_Portfolio_Get::get( array( 'id' => $id ) );
-                    ?>
-                </div>
+        // Post data for script.
+        wp_localize_script(
+            'visual-portfolio-preview',
+            'vp_preview_post_data',
+            // phpcs:ignore
+            isset( $_POST ) && ! empty( $_POST ) ? $_POST : array()
+        );
 
-                <?php wp_footer(); ?>
-            </body>
-        </html>
-        <?php
+        // Custom styles.
+        visual_portfolio()->include_template_style( 'visual-portfolio-preview', 'preview/style' );
+
+        // Output template.
+        visual_portfolio()->include_template(
+            'preview/preview',
+            array(
+                'id' => $id,
+            )
+        );
     }
 }

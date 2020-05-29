@@ -25,6 +25,7 @@ class Visual_Portfolio_Extend {
      * @return array
      */
     public static function layouts() {
+        // phpcs:ignore
         /*
          * Example:
             array(
@@ -47,6 +48,7 @@ class Visual_Portfolio_Extend {
      * @return array
      */
     public static function layout_controls( $name, $controls ) {
+        // phpcs:ignore
         /*
          * Example:
             array(
@@ -62,6 +64,7 @@ class Visual_Portfolio_Extend {
      * @return array
      */
     public static function tiles() {
+        // phpcs:ignore
         /*
          * Example:
             array(
@@ -84,6 +87,7 @@ class Visual_Portfolio_Extend {
      * @return array
      */
     public static function items_styles() {
+        // phpcs:ignore
         /*
          * Example:
             array(
@@ -114,6 +118,7 @@ class Visual_Portfolio_Extend {
      * @return array
      */
     public static function item_style_controls( $name, $controls ) {
+        // phpcs:ignore
         /*
          * Example:
             array(
@@ -129,6 +134,7 @@ class Visual_Portfolio_Extend {
      * @return array
      */
     public static function filters() {
+        // phpcs:ignore
         /*
          * Example:
             array(
@@ -151,6 +157,7 @@ class Visual_Portfolio_Extend {
      * @return array
      */
     public static function filter_controls( $name, $controls ) {
+        // phpcs:ignore
         /*
          * Example:
             array(
@@ -161,11 +168,51 @@ class Visual_Portfolio_Extend {
     }
 
     /**
+     * Additional Sort.
+     *
+     * @return array
+     */
+    public static function sort() {
+        // phpcs:ignore
+        /*
+         * Example:
+            array(
+                'new_sort' => array(
+                    'title' => esc_html__( 'New Sort', 'visual-portfolio' ),
+                    'controls' => array(
+                        ... controls ...
+                    ),
+                ),
+            )
+         */
+        return apply_filters( 'vpf_extend_sort', array() );
+    }
+
+    /**
+     * Extend Specific Sort Controls.
+     *
+     * @param string $name - sort name.
+     * @param array  $controls - controls array.
+     * @return array
+     */
+    public static function sort_controls( $name, $controls ) {
+        // phpcs:ignore
+        /*
+         * Example:
+            array(
+                ... controls ...
+            )
+         */
+        return apply_filters( 'vpf_extend_sort_' . $name . '_controls', $controls );
+    }
+
+    /**
      * Additional Pagination.
      *
      * @return array
      */
     public static function pagination() {
+        // phpcs:ignore
         /*
          * Example:
             array(
@@ -188,6 +235,7 @@ class Visual_Portfolio_Extend {
      * @return array
      */
     public static function pagination_controls( $name, $controls ) {
+        // phpcs:ignore
         /*
          * Example:
             array(
@@ -205,6 +253,7 @@ class Visual_Portfolio_Extend {
      * @return array
      */
     public static function portfolio_attrs( $attrs, $options ) {
+        // phpcs:ignore
         /*
          * Example:
             array(
@@ -223,5 +272,97 @@ class Visual_Portfolio_Extend {
      */
     public static function portfolio_class( $class, $options ) {
         return apply_filters( 'vpf_extend_portfolio_class', $class, $options );
+    }
+
+    /**
+     * Additional Image Controls.
+     *
+     * @param array  $controls - list of image controls.
+     * @param string $name - unique option name.
+     * @return array
+     */
+    public static function image_controls( $controls, $name ) {
+        // phpcs:ignore
+        /*
+         * Example:
+            array(
+                'title' => array(
+                    'type'  => 'text',
+                    'label' => esc_html__( 'Title', 'visual-portfolio' ),
+                    'name'  => $name . '_additional_title',
+                ),
+                'description' => array(
+                    'type'  => 'textarea',
+                    'label' => esc_html__( 'Description', 'visual-portfolio' ),
+                    'name'  => $name . '_additional_description',
+                ),
+            )
+         */
+        return apply_filters( 'vpf_extend_image_controls', $controls, $name );
+    }
+
+    /**
+     * Extend Query Args.
+     *
+     * @param array  $args - query arguments.
+     * @param string $options - portfolio options.
+     * @param string $id - portfolio id.
+     * @return array
+     */
+    public static function query_args( $args, $options, $id ) {
+        return apply_filters( 'vpf_extend_query_args', $args, $options, $id );
+    }
+
+    /**
+     * Extend Filter Items.
+     *
+     * @param array  $items - list of all filter items.
+     * @param string $options - portfolio options.
+     * @return array
+     */
+    public static function filter_items( $items, $options ) {
+        // phpcs:ignore
+        /*
+         * Example:
+            array(
+                array(
+                    'filter'      => '*',
+                    'label'       => $options['vp_filter_text_all'],
+                    'description' => false,
+                    'count'       => false,
+                    'active'      => true,
+                    'url'         => Visual_Portfolio_Get::get_pagenum_link(
+                        array(
+                            'vp_filter' => '',
+                            'vp_page' => 1,
+                        )
+                    ),
+                    'class'       => 'vp-filter__item',
+                ),
+            )
+         */
+        return apply_filters( 'vpf_extend_filter_items', $items, $options );
+    }
+
+    /**
+     * Extend Sort Items.
+     *
+     * @param array  $items - list of all sort items.
+     * @param string $options - portfolio options.
+     * @return array
+     */
+    public static function sort_items( $items, $options ) {
+        // phpcs:ignore
+        /*
+         * Example:
+            array(
+                ''           => esc_html__( 'Default sorting', 'visual-portfolio' ),
+                'date_desc'  => esc_html__( 'Sort by date (newest)', 'visual-portfolio' ),
+                'date'       => esc_html__( 'Sort by date (oldest)', 'visual-portfolio' ),
+                'title'      => esc_html__( 'Sort by title (A-Z)', 'visual-portfolio' ),
+                'title_desc' => esc_html__( 'Sort by title (Z-A)', 'visual-portfolio' ),
+            )
+         */
+        return apply_filters( 'vpf_extend_sort_items', $items, $options );
     }
 }
