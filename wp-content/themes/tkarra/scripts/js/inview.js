@@ -7,10 +7,14 @@ jQuery(document).ready(function () {
     let obj = jQuery(this);
     //the top Scroll Position in the page
     const scrollPosition = win.scrollTop();
+
     //the end of the visible area in the page, starting from the scroll position
     const visibleArea = win.scrollTop() + win.height();
     //the end of the object to check
-    const objEndPos = (obj.offset().top + obj.outerHeight());
+    const objEndPos = obj.attr('data-inview') === 'hero-image'
+      ? obj.offset().top
+      : (obj.offset().top + obj.outerHeight());
+
     if (visibleArea + 20 >= objEndPos && scrollPosition <= objEndPos) {
       obj.removeClass('inview--not');
     }

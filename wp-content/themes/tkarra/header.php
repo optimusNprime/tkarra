@@ -38,7 +38,7 @@
             <link rel="profile" href="https://gmpg.org/xfn/11"/>
             <link rel="stylesheet" href="<?php echo get_template_directory_uri() ?>/styles/main.css">
             <link rel="stylesheet" href="<?php echo get_template_directory_uri() ?>/scripts/modules/slick/slick.css"></link>
-            <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Montserrat:300,400,700%7CRaleway:100,200,300,regular,500,600,700,800,900">
+            <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Montserrat:300,400,500,700%7CRaleway:100,200,300,regular,500,600,700,800,900">
             <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
             <?php wp_head(); ?>
         </head>

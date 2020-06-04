@@ -76,8 +76,14 @@
     }
 }
 
-@media screen and (min-width: $lg) {
+@media screen and (min-width: $md) {
     .text-box {
-        padding: 90px 85px;
+        padding: 120px 100px;
+    }
+}
+
+@media screen and (min-width: $xl) {
+    .text-box {
+        padding: 180px 150px;
     }
 }

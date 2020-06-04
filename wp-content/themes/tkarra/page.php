@@ -26,11 +26,8 @@ $nbRow = 0;
 
           <?php if (get_row_layout() == 'hero'): ?>
           <div id="<?php the_sub_field('id'); ?>" class="hero flex-row" style="background-color: <?php the_sub_field('color');?>; color: <?php the_sub_field('text_color'); ?>;">
-            <div class="flex-col--12 flex-col--<?php the_sub_field('width_text_box'); ?>">
+            <div class="flex-col--12">
               <?php get_template_part('template-parts/hero/hero', 'content'); ?>
-            </div>
-            <div class="flex-col--12 flex-col--<?php the_sub_field('width_image_box'); ?>">
-              <?php get_template_part('template-parts/carrousel/carrousel'); ?>
             </div>
           </div>
 
@@ -72,6 +69,16 @@ $nbRow = 0;
             </div>
             <div class="flex-col--12 flex-col--<?php the_sub_field('width_map_box'); ?>">
               <?php get_template_part('template-parts/map'); ?>
+            </div>
+          </div>
+
+        <?php elseif (get_row_layout() == 'map_text'): ?>
+          <div id="<?php the_sub_field('id'); ?>" class="flex-row" style="background-color: <?php the_sub_field('color'); ?>; color: <?php the_sub_field('text_color'); ?>;">
+            <div class="flex-col--12 flex-col--<?php the_sub_field('width_map_box'); ?>">
+              <?php get_template_part('template-parts/map'); ?>
+            </div>
+            <div class="flex-col--12 flex-col--<?php the_sub_field('width_text_box'); ?>">
+              <?php get_template_part('template-parts/content/content', 'text'); ?>
             </div>
           </div>
 
