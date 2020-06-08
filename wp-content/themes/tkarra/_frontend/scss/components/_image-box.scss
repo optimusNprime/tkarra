@@ -16,5 +16,10 @@
         .image-box--in-first-row & {
             display: block;
         }
+
+        .hero-variant & {
+            position: relative;
+            z-index: 3;
+        }
     }
 }

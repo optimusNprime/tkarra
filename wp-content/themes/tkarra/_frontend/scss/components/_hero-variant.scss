@@ -1,0 +1,12 @@
+.hero-variant {
+    overflow: visible;
+
+    @media screen and (min-width: $lg) {
+        + .flex-row {
+            padding-top: 100px;
+            position: relative;
+            top: -100px;
+            z-index: 2;
+        }
+    }
+}
