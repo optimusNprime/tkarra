@@ -82,12 +82,16 @@
     }
 }
 
-@media screen and (min-width: $xl) {
+@media screen and (min-width: $lg) {
     .text-box {
-        padding: 180px 150px;
-
         .hero-variant & {
             padding: 100px 150px 190px;
         }
+    }
+}
+
+@media screen and (min-width: $xl) {
+    .text-box {
+        padding: 180px 150px;
     }
 }
