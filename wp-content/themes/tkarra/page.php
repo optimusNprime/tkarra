@@ -25,11 +25,21 @@ $nbRow = 0;
           the_row(); ?>
 
           <?php if (get_row_layout() == 'hero'): ?>
-          <div id="<?php the_sub_field('id'); ?>" class="hero flex-row" style="background-color: <?php the_sub_field('color');?>; color: <?php the_sub_field('text_color'); ?>;">
-            <div class="flex-col--12">
-              <?php get_template_part('template-parts/hero/hero', 'content'); ?>
+            <div id="<?php the_sub_field('id'); ?>" class="hero flex-row" style="background-color: <?php the_sub_field('color');?>; color: <?php the_sub_field('text_color'); ?>;">
+              <div class="flex-col--12">
+                <?php get_template_part('template-parts/hero/hero', 'content'); ?>
+              </div>
             </div>
-          </div>
+
+          <?php elseif (get_row_layout() == 'hero_variant'): ?>
+            <div id="<?php the_sub_field('id'); ?>" class="flex-row hero-variant" style="background-color: <?php the_sub_field('color'); ?>; color: <?php the_sub_field('text_color'); ?>;">
+                <div class="flex-col--12 flex-col--<?php the_sub_field('width_text_box'); ?>">
+                  <?php get_template_part('template-parts/content/content', 'text'); ?>
+                </div>
+                <div class="flex-col--12 flex-col--<?php the_sub_field('width_image_box'); ?>">
+                  <?php get_template_part('template-parts/content/content', 'image'); ?>
+                </div>
+            </div>
 
 
         <?php elseif (get_row_layout() == 'text_image'): ?>
