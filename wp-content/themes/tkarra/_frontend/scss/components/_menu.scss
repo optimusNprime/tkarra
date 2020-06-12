@@ -1,7 +1,7 @@
 .menu {
   align-items: stretch;
-  background-color: $white;
-  color: currentColor;
+  background-color: $blue;
+  color: $white;
   display: flex;
   flex-direction: column;
   height: 100%;
@@ -9,12 +9,11 @@
 
   &__logo {
     background-color: currentColor;
-    padding: 10px 25px;
-    width: 40px;
+    width: 60px;
   }
 
   &__content {
-    background-color: $white;
+    background-color: $blue;
     display: flex;
     flex-direction: column;
     flex: 1 1 100%;
@@ -33,8 +32,8 @@
     }
 
     .admin-bar & {
-      height: calc(100vh - 134px);
-      top: 134px;
+      height: calc(100vh - 106px);
+      top: 106px;
     }
   }
 
@@ -50,6 +49,10 @@
       display: block;
       padding-bottom: 5px;
       text-transform: uppercase;
+    }
+
+    &__phone {
+      font-weight: bold;
     }
 
     &__phone,
@@ -68,7 +71,7 @@
     width: 90px;
 
     .is-opened & {
-      background-color: $grey;
+      background-color: $blue;
     }
   }
 
@@ -80,7 +83,7 @@
 
 .menu-container {
   align-items: stretch;
-  background-color: $white;
+  background-color: $blue;
   display: flex;
   flex-direction: column;
   height: 60px;
@@ -94,8 +97,6 @@
   display: flex;
 
   &:hover {
-    background-color: $grey;
-
     .footer & {
       background-color: transparent;
       color: $grey;
@@ -106,9 +107,7 @@
     }
   }
 
-  &.current-menu-item {
-    background-color: $grey;
-
+  &.current-menu-item { 
     .footer & {
       background-color: transparent;
     }
@@ -174,17 +173,18 @@
 
 @media screen and (min-width: $lg) {
   .menu {
+    align-items: center;
     flex-direction: row;
 
     &__logo {
       align-self: center;
-      width: 70px;
+      width: 90px;
     }
 
     &__content {
       height: auto;
       flex-direction: row;
-      margin-left: 5%;
+      margin-left: 20px;
       position: relative;
       transform: translate(0);
       top: inherit;
@@ -207,17 +207,17 @@
     }
 
     &__estimation {
-      background-color: $white;
+      background-color: $blue;
       padding: 0;
       text-align: right;
 
       &__text,
       &__phone {
-        color: $darkgrey;
+        color: $white;
         transition: color 0.3s;
 
         &:hover {
-          color: $blue;
+          color: $darkgrey;
         }
       }
     }
@@ -234,6 +234,7 @@
   .menu-container {
     flex-direction: row;
     height: 88px;
+    padding: 0 8%;
   }
 
   .menu-item {
@@ -250,6 +251,37 @@
           position: absolute;
           transform: translate(0, 100%);
         }
+      }
+    }
+
+    > a {
+      margin: 0 20px;
+      padding: 0;
+      position: relative;
+  
+      &::after {
+        background-color: $white;
+        bottom: 0;
+        content: '';
+        height: 1px;
+        left: 50%;
+        opacity: 0;
+        position: absolute;
+        transform: translateX(-50%);
+        transition: opacity 0.3s;
+        width: 100%;
+      }
+  
+      &:hover {
+        &::after {
+          opacity: 1;
+        }
+      }
+    }
+
+    &.current-menu-item > a {
+      &::after {
+        opacity: 1;
       }
     }
   }
