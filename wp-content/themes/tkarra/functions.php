@@ -27,6 +27,12 @@ function add_my_script() {
     get_template_directory_uri() . '/scripts/js/inview.js',
     array('jquery')
   );
+
+  wp_enqueue_script(
+    'open-collapse',
+    get_template_directory_uri() . '/scripts/js/open-collapse.js',
+    array('jquery')
+  );
 }
 
 /**

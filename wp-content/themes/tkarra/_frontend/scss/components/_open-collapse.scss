@@ -1,0 +1,64 @@
+.open-collapse {
+    padding: 80px 5%;
+}
+
+.open-collapse__drawer {
+    border-bottom: 2px solid $grey;
+    padding-bottom: 30px;
+    max-width: 896px;
+
+    + .open-collapse__drawer {
+        margin-top: 30px;
+    }
+}
+
+.open-collapse__drawer__button {
+    background-color: transparent;
+    border: 0;
+    color: currentColor;
+    cursor: pointer;
+    font-family: $sans-serif;
+    font-size: 1.6rem;
+    font-weight: 600;
+    padding-right: 20px;
+    position: relative;
+    text-align: left;
+    width: 100%;
+
+    
+    @media screen and (min-width: $md) {
+        font-size: 2.4rem;
+    }
+
+    &::before,
+    &::after {
+        background-color: currentColor;
+        content: '';
+        position: absolute;
+        right: 0;
+        top: 50%;
+        transform: translateY(-50%);
+    }
+
+    &::before {
+        height: 2px;
+        width: 14px;
+    }
+
+    &::after {
+        height: 14px;
+        right: 6px;
+        width: 2px;
+    }
+}
+
+.open-collapse__drawer__content-container {
+    height: 0;
+    overflow: hidden;
+    padding: 0 0;
+    transition: height 0.3s;
+
+    .is-open & {
+        padding: 20px 0 0;
+    }
+}

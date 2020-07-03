@@ -18,7 +18,8 @@
         }
 
         .hero-variant & {
-            position: relative;
+            height: calc(100% + 100px);
+            position: absolute;
             z-index: 3;
         }
     }

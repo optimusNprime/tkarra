@@ -1,10 +1,8 @@
-$offset: 65px;
-
 .hero {
 	overflow: visible;
 
 	&__content {
-		padding: $offset 0 0 10%;
+		padding: 50px 0 0 6%;
 		position: relative;
 	}
 
@@ -57,16 +55,12 @@ $offset: 65px;
 	}
 
 	+ .flex-row {
-		padding-top: $offset;
 		position: relative;
-		top: -#{$offset};
 		z-index: 2;
 	}
 }
 
 @media screen and (min-width: $md) {
-	$offset: 100px;
-
 	.hero {
 		&__title {
 			font-size: 6rem;
@@ -80,17 +74,10 @@ $offset: 65px;
 			height: auto;
 			width: 100%;
 		}
-
-		+ .flex-row {
-			padding-top: $offset;
-			top: -#{$offset};
-		}
 	}
 }
 
 @media screen and (min-width: $lg) {
-	$offset: 200px;
-
 	.hero {
 		&__content {
 			padding: 75px 0 0 8%;
@@ -117,12 +104,29 @@ $offset: 65px;
 
 		&__container-image {
 			padding-bottom: 43%;
+			overflow: visible;
 		}
 
+		&__image {
+			height: calc(100% + 150px);
+			left: auto;
+			object-fit: cover;
+			pointer-events: none;
+			position: absolute;
+			top: auto;
+			transform: translate(0, 0);
+		}
 
 		+ .flex-row {
-			top: -#{$offset};
-			padding-top: calc(#{$offset} + 100px);
+			padding-top: 200px;
+		}
+	}
+}
+
+@media screen and (min-width: $xl) {
+	.hero {
+		+ .flex-row {
+			padding-top: 250px;
 		}
 	}
 }

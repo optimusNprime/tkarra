@@ -144,6 +144,13 @@ $nbRow = 0;
           <div id="<?php the_sub_field('id'); ?>" class="map-container">
             <?php get_template_part('template-parts/map'); ?>
           </div>
+
+        <?php elseif (get_row_layout() === 'open_collapse'): ?>
+          <div id="<?php the_sub_field('id'); ?>" class="flex-row" style="color: <?php the_sub_field('color'); ?>">
+            <div class="flex-col--12">
+              <?php get_template_part('template-parts/open-collapse'); ?>
+            </div>
+          </div>
         <?php endif; ?>
         <?php 
 

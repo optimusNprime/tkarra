@@ -20,6 +20,10 @@
   font-size: 1.2rem;
 }
 
+.wpml-ls-legacy-list-horizontal a {    
+  padding: 0 !important;
+}
+
 @media screen and (min-width: $lg) {
   .wpml-ls-link {
     color: $white;
@@ -28,7 +32,7 @@
     transition: color 0.3s;
   }
 
-  .wpml-ls-legacy-list-horizontal a {
+  .wpml-ls-legacy-list-horizontal a {    
     padding: 0 0 5px !important;
   }
 }
