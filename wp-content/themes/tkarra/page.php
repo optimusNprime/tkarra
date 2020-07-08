@@ -131,12 +131,12 @@ $nbRow = 0;
           </div>
 
         <?php elseif (get_row_layout() === 'contact'): ?>
-          <div id="<?php the_sub_field('id'); ?>" class="flex-row" style="color: <?php the_sub_field('text_color'); ?>;">
-            <div class="flex-col--12 flex-col--<?php the_sub_field('width_zone_contact'); ?>" style="background-color: <?php the_sub_field('color_zone_contact'); ?>">
-              <?php get_template_part('template-parts/contact/contact', 'content'); ?>
-            </div>
+          <div id="<?php the_sub_field('id'); ?>" class="flex-row flex-row--reverse" style="color: <?php the_sub_field('text_color'); ?>;">
             <div class="flex-col--12 flex-col--<?php the_sub_field('width_zone_form'); ?>">
               <?php get_template_part('template-parts/contact/contact', 'form'); ?>
+            </div>
+            <div class="flex-col--12 flex-col--<?php the_sub_field('width_zone_contact'); ?>" style="background-color: <?php the_sub_field('color_zone_contact'); ?>">
+              <?php get_template_part('template-parts/contact/contact', 'content'); ?>
             </div>
           </div>
 

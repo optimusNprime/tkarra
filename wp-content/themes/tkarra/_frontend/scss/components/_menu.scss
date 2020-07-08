@@ -96,6 +96,10 @@
   align-items: center;
   display: flex;
 
+  .footer & {
+    width: 100%;
+  }
+
   &:hover {
     .footer & {
       background-color: transparent;
